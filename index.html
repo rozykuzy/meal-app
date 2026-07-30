@@ -11,12 +11,13 @@
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
   --surface-1:#ffffff; --page:#f5f5f7;
-  --ink-1:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b;
+  --ink-1:#1d1d1f; --ink-2:#5a5a60; --ink-3:#6b6b70;
   --grid:#f0f0f2; --axis:#e3e3e8; --ring:#ececf0;
-  --accent:#0071e3; --accent-soft:#e8f2ff;
+  --accent:#0071e3; --accent-soft:#e8f2ff; --accent-text:#0062c4;
   --good:#34c759; --good-text:#1f9d4d; --warn:#ff9500; --serious:#ff6b35; --crit:#ff3b30;
   --good-bg:rgba(52,199,89,.12); --warn-bg:rgba(255,149,0,.12); --serious-bg:rgba(255,107,53,.12); --crit-bg:rgba(255,59,48,.10);
-  --navbar:rgba(255,255,255,.78); --navbar-on:#0071e3; --navbar-off:#86868b;
+  --crit-text:#d70015; --serious-text:#c14a1c;
+  --navbar:rgba(255,255,255,.78); --navbar-on:#0062c4; --navbar-off:#6b6b70;
   --glass:rgba(255,255,255,.72); --glass-strong:rgba(255,255,255,.88); --hairline:rgba(0,0,0,.07);
   /* Liquid Glass: 유리 틴트·135° 좌상단 스펙큘러 림·iOS26 2단 그림자 */
   --glass-tint:rgba(210,220,240,.12); --glass-sat:120%;
@@ -31,17 +32,18 @@
   --accent-2:#4db8ff; --accent-grad:linear-gradient(135deg,#0071e3 0%,#4db8ff 100%);
   --glow:0 2px 10px rgba(0,113,227,.22); --glow-soft:0 0 6px rgba(0,113,227,.12);
   --accent-halo:rgba(0,113,227,.09); --ring-glow:none;
-  --label:#8b95a3;
+  --label:#5f6875;
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
   --surface-1:#1c1c1e; --page:#000000;
-  --ink-1:#f5f5f7; --ink-2:#9a9aa0; --ink-3:#6e6e76;
+  --ink-1:#f5f5f7; --ink-2:#a5a5ad; --ink-3:#94949e;
   --grid:#2c2c2e; --axis:#38383a; --ring:rgba(255,255,255,.07);
-  --accent:#2997ff; --accent-soft:rgba(41,151,255,.16);
+  --accent:#2997ff; --accent-soft:rgba(41,151,255,.16); --accent-text:#5eb0ff;
   --good:#30d158; --good-text:#30d158; --warn:#ff9f0a; --serious:#ff7d5c; --crit:#ff453a;
   --good-bg:rgba(48,209,88,.14); --warn-bg:rgba(255,159,10,.14); --serious-bg:rgba(255,125,92,.14); --crit-bg:rgba(255,69,58,.14);
-  --navbar:rgba(28,28,30,.8); --navbar-on:#2997ff; --navbar-off:#7c7c81;
+  --crit-text:#ff6961; --serious-text:#ff9878;
+  --navbar:rgba(28,28,30,.8); --navbar-on:#5eb0ff; --navbar-off:#98989f;
   --glass:rgba(28,28,30,.72); --glass-strong:rgba(28,28,30,.88); --hairline:rgba(255,255,255,.09);
   --glass-tint:rgba(255,255,255,.08); --glass-sat:120%;
   --rim-hi:rgba(255,255,255,.16); --rim-lo:rgba(255,255,255,.04); --sheen:rgba(255,255,255,.10);
@@ -51,18 +53,19 @@
   --accent:#0a84ff; --accent-2:#64d2ff; --accent-grad:linear-gradient(135deg,#0a84ff 0%,#64d2ff 100%);
   --glow:0 2px 14px rgba(10,132,255,.42); --glow-soft:0 0 10px rgba(10,132,255,.35);
   --accent-halo:rgba(10,132,255,.20); --ring-glow:drop-shadow(0 0 5px rgba(10,132,255,.45));
-  --label:#79828f;
+  --label:#9aa3b1;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme: dark;
     --surface-1:#1c1c1e; --page:#000000;
-    --ink-1:#f5f5f7; --ink-2:#9a9aa0; --ink-3:#6e6e76;
+    --ink-1:#f5f5f7; --ink-2:#a5a5ad; --ink-3:#94949e;
     --grid:#2c2c2e; --axis:#38383a; --ring:rgba(255,255,255,.07);
-    --accent:#2997ff; --accent-soft:rgba(41,151,255,.16);
+    --accent:#2997ff; --accent-soft:rgba(41,151,255,.16); --accent-text:#5eb0ff;
     --good:#30d158; --good-text:#30d158; --warn:#ff9f0a; --serious:#ff7d5c; --crit:#ff453a;
     --good-bg:rgba(48,209,88,.14); --warn-bg:rgba(255,159,10,.14); --serious-bg:rgba(255,125,92,.14); --crit-bg:rgba(255,69,58,.14);
-    --navbar:rgba(28,28,30,.8); --navbar-on:#2997ff; --navbar-off:#7c7c81;
+    --crit-text:#ff6961; --serious-text:#ff9878;
+    --navbar:rgba(28,28,30,.8); --navbar-on:#5eb0ff; --navbar-off:#98989f;
     --glass:rgba(28,28,30,.72); --glass-strong:rgba(28,28,30,.88); --hairline:rgba(255,255,255,.09);
     --glass-tint:rgba(255,255,255,.08); --glass-sat:120%;
     --rim-hi:rgba(255,255,255,.16); --rim-lo:rgba(255,255,255,.04); --sheen:rgba(255,255,255,.10);
@@ -72,7 +75,7 @@
     --accent:#0a84ff; --accent-2:#64d2ff; --accent-grad:linear-gradient(135deg,#0a84ff 0%,#64d2ff 100%);
     --glow:0 2px 14px rgba(10,132,255,.42); --glow-soft:0 0 10px rgba(10,132,255,.35);
     --accent-halo:rgba(10,132,255,.20); --ring-glow:drop-shadow(0 0 5px rgba(10,132,255,.45));
-    --label:#79828f;
+    --label:#9aa3b1;
   }
 }
 html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; overflow-x:clip; touch-action:manipulation }
@@ -98,7 +101,8 @@ header.app::after{content:""; position:absolute; top:100%; left:0; right:0; heig
 .ab-title{flex:1; text-align:center; min-width:0}
 header.app h1{font-size:17px; margin:0; font-weight:800; letter-spacing:-.3px}
 header.app .date{color:var(--ink-3); font-size:11.5px; letter-spacing:0; margin-top:1px}
-.theme-btn{border:0; background:none; color:var(--ink-2); font-size:17px; cursor:pointer; padding:6px 8px; line-height:1; border-radius:10px;
+.theme-btn{border:0; background:none; color:var(--ink-2); font-size:17px; cursor:pointer; padding:0; line-height:1; border-radius:10px;
+  min-width:44px; min-height:44px; display:inline-flex; align-items:center; justify-content:center;
   transition:transform 120ms var(--ease-out-strong)}
 .theme-btn:active{transform:scale(.9)}
 /* stat tiles */
@@ -153,7 +157,7 @@ hr.h{border:0; border-top:1px solid var(--grid); margin:12px 0}
 .btn.primary{background:var(--accent-grad); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.28), var(--glow)}
 .btn.dark{background:var(--ink-1); color:var(--surface-1)}
 .btn.ghost{background:transparent; color:var(--accent)}
-.btn.sm{padding:8px 13px; font-size:12.5px; border-radius:var(--r-cap); min-height:0; font-weight:600; background:var(--grid)}
+.btn.sm{padding:8px 13px; font-size:12.5px; border-radius:var(--r-cap); min-height:44px; min-width:44px; font-weight:600; background:var(--grid)}
 .btn:disabled{opacity:.4; cursor:default}
 .btnrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
 /* badges */
@@ -176,7 +180,7 @@ hr.h{border:0; border-top:1px solid var(--grid); margin:12px 0}
   border-radius:14px; padding:11px 13px}
 .state-line{margin-top:9px; font-size:12.5px; color:var(--ink-2)}
 details.rsteps{margin-top:7px}
-details.rsteps summary{cursor:pointer; font-size:12.5px; color:var(--accent); font-weight:700; list-style:none; user-select:none;
+details.rsteps summary{cursor:pointer; font-size:12.5px; color:var(--accent-text); font-weight:700; list-style:none; user-select:none;
   transition:transform 120ms var(--ease-out-strong)}
 details.rsteps summary::-webkit-details-marker{display:none}
 details.rsteps summary::before{content:"▸"; display:inline-block; margin-right:5px;
@@ -215,10 +219,10 @@ details.rsteps li{margin-bottom:5px}
 .led-act{flex:none; display:flex; gap:5px}
 .led-act button{-webkit-appearance:none; appearance:none; border:1px solid var(--axis); background:var(--surface-1);
   color:var(--ink-2); font-family:inherit; font-size:12px; font-weight:700; line-height:1;
-  padding:0 10px; height:32px; min-width:32px; border-radius:var(--r-cap); cursor:pointer;
+  padding:0 12px; height:44px; min-width:44px; border-radius:var(--r-cap); cursor:pointer;
   touch-action:manipulation; white-space:nowrap; transition:background 100ms var(--ease-out-strong)}
 .led-act button:active{background:var(--grid)}
-.led-act button.del{color:var(--crit)}
+.led-act button.del{color:var(--crit-text)}
 .led-batch{display:flex; align-items:center; gap:8px; margin:12px 0 2px; font-size:12.5px; color:var(--ink-2)}
 .led-batch b{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .order-row:last-child{border-bottom:0}
@@ -227,7 +231,8 @@ details.rsteps li{margin-bottom:5px}
 .order-row .pr{margin-left:auto; white-space:nowrap; font-variant-numeric:tabular-nums; font-weight:600}
 .order-row .links{display:flex; gap:5px}
 a.shop{font-size:11.5px; font-weight:700; text-decoration:none; border:0; border-radius:var(--r-cap);
-  padding:5px 11px; color:var(--accent); background:var(--accent-soft); white-space:nowrap; display:inline-block;
+  min-height:44px; display:inline-flex; align-items:center; justify-content:center;
+  padding:5px 11px; color:var(--accent-text); background:var(--accent-soft); white-space:nowrap; display:inline-block;
   transition:transform 120ms var(--ease-out-strong), filter 120ms ease}
 a.shop:active{transform:scale(.95)}
 .total-line{display:flex; justify-content:space-between; font-weight:800; padding-top:10px; font-size:14.5px}
@@ -270,6 +275,7 @@ label.f{display:block; font-size:12.5px; color:var(--ink-2); margin:11px 0 5px; 
 .chips{display:flex; gap:7px; overflow-x:auto; padding:2px 0 4px; -webkit-overflow-scrolling:touch}
 .chip{flex:0 0 auto; border:0; background:var(--grid); color:var(--ink-2);
   border-radius:var(--r-cap); padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer;
+  min-height:44px; display:inline-flex; align-items:center; justify-content:center;
   transition:transform var(--dur) var(--ease-spring), background-color var(--dur-fast) ease, color var(--dur-fast) ease}
 .chip.on{background:var(--accent-grad); color:#fff; font-weight:800; box-shadow:var(--glow-soft)}
 .chip:active{transform:scale(.95)}
@@ -278,7 +284,7 @@ table.tiers td{padding:6px 4px; border-bottom:1px solid var(--grid); vertical-al
 table.tiers td.n{white-space:nowrap; font-variant-numeric:tabular-nums}
 table.tiers tr.on td{font-weight:800; color:var(--accent)}
 /* 주간표 메뉴 선택 버튼 */
-.mpick{display:inline-block; margin:0 6px 6px 0; padding:9px 13px; font-size:12.5px; font-weight:600;
+.mpick{display:inline-flex; align-items:center; min-height:44px; margin:0 6px 6px 0; padding:9px 13px; font-size:12.5px; font-weight:600;
   border:0; background:var(--grid); color:var(--ink-1); border-radius:11px; cursor:pointer;
   transition:transform 120ms var(--ease-out-strong), background-color 120ms ease}
 .mpick b{color:var(--ink-3); font-weight:700; margin-right:4px}
@@ -335,7 +341,8 @@ table.tiers tr.on td{font-weight:800; color:var(--accent)}
   to{transform:none; -webkit-backdrop-filter:saturate(var(--glass-sat)) blur(24px); backdrop-filter:saturate(var(--glass-sat)) blur(24px)}}
 .sheet-grip{width:40px; height:4.5px; border-radius:3px; background:var(--axis); margin:6px auto 8px}
 .sheet-h{display:flex; align-items:center; justify-content:space-between; padding:2px 0 10px; font-size:17px; font-weight:800; letter-spacing:-.3px}
-.sheet-x{border:0; background:var(--grid); border-radius:var(--r-cap); font-size:15px; color:var(--ink-2); cursor:pointer; padding:6px 9px; line-height:1; border-radius:10px}
+.sheet-x{border:0; background:var(--grid); border-radius:var(--r-cap); font-size:15px; color:var(--ink-2); cursor:pointer; padding:0; line-height:1; border-radius:10px;
+  min-width:44px; min-height:44px; display:inline-flex; align-items:center; justify-content:center}
 .sheet-list{display:flex; flex-direction:column; gap:8px}
 .opt{display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:100%; text-align:left;
   border:1.5px solid var(--grid); background:var(--surface-1); color:var(--ink-1); border-radius:var(--r-md);
@@ -360,9 +367,10 @@ table.tiers tr.on td{font-weight:800; color:var(--accent)}
 .pick-search:focus{outline:none; border-color:var(--accent); background:var(--surface-1)}
 @media (hover:hover){ .opt:not(.off):not(.cur):hover{border-color:var(--axis)} }
 .sched-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch}
-table.sched{width:100%; border-collapse:separate; border-spacing:5px; min-width:330px}
+table.sched{width:100%; border-collapse:separate; border-spacing:5px; min-width:330px; table-layout:fixed}
+table.sched th:first-child, table.sched td.sday{width:46px}
 table.sched th{padding:0}
-.sc-th{width:100%; border:0; background:none; color:var(--ink-2); font-size:12px; font-weight:700; cursor:pointer; padding:2px}
+.sc-th{width:100%; min-height:44px; border:0; background:none; color:var(--ink-2); font-size:12px; font-weight:700; cursor:pointer; padding:2px}
 .sc-th .sn{font-size:10px; color:var(--ink-3); font-weight:500; font-variant-numeric:tabular-nums}
 td.sday{font-size:12.5px; font-weight:700; color:var(--ink-2); white-space:nowrap; text-align:center; width:34px}
 td.sday .sn{font-size:9.5px; color:var(--ink-3); font-weight:500; font-variant-numeric:tabular-nums}
@@ -370,7 +378,7 @@ td.sday .sn{font-size:9.5px; color:var(--ink-3); font-weight:500; font-variant-n
   cursor:pointer; padding:4px 5px; color:var(--ink-3); display:flex; align-items:center; justify-content:center;
   transition:transform var(--dur) var(--ease-spring), background-color var(--dur-fast) ease}
 .scell:active{transform:scale(.93)}
-.scell.on{background:var(--accent-soft); color:var(--accent)}
+.scell.on{background:var(--accent-soft); color:var(--accent-text)}
 .sc-name{font-size:10.5px; font-weight:700; line-height:1.15; text-align:center; word-break:keep-all}
 .sc-plus{font-size:17px; font-weight:400; color:var(--ink-3)}
 table.plan.wk td{vertical-align:top}
@@ -437,7 +445,7 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
 /* 캘린더(기록) — 애플 건강 앱 활동 링 문법 */
 .cal-head{display:flex; align-items:center; gap:10px; margin-bottom:2px}
 .cal-head .ym{font-size:17px; font-weight:800; letter-spacing:-.3px; flex:1; text-align:center}
-.cal-nav{border:0; background:var(--grid); color:var(--ink-1); width:36px; height:36px; border-radius:var(--r-cap);
+.cal-nav{border:0; background:var(--grid); color:var(--ink-1); width:44px; height:44px; border-radius:var(--r-cap);
   font-size:15px; cursor:pointer; flex:0 0 auto; transition:transform var(--dur) var(--ease-spring)}
 .cal-nav:active{transform:scale(.9)}
 .cal-nav:disabled{opacity:.35; cursor:default}
@@ -502,8 +510,9 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
 .cmt{font-size:13px; color:var(--ink-2)} .cmt b{color:var(--ink-1); margin-right:4px}
 </style>
 <!-- 폰트: 렌더를 막지 않게 비동기 로드(로드 전엔 시스템 폰트로 즉시 표시) -->
-<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"></noscript>
+<!-- 동적 서브셋: 화면에 실제로 쓰인 글자가 든 조각만 내려받는다(굵기는 가변 폰트 하나로 전부). -->
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
 </head>
 <body>
 <noscript><div style="margin:14px;padding:14px;border:1px solid #ccc;border-radius:10px;font:14px/1.6 -apple-system,system-ui,sans-serif">이 앱은 자바스크립트로 동작합니다. 미리보기에서 화면이 비어 보이면, 파일을 <b>다운로드</b>해서 크롬·사파리 같은 브라우저로 열어 주세요.</div></noscript>
@@ -1394,7 +1403,7 @@ function myStockCard(){
     const hits = k?0:recipeHits(m.name);
     const matchBadge = k?`<span class="badge good">레시피 매칭</span>`
       : hits>0?`<span class="badge good">레시피 ${hits}개</span>`:`<span class="badge plain">레시피 검색</span>`;
-    const qtyTxt=(Math.round(m.qty*10)/10)+(m.unit||"개")+(m.storage?" · "+m.storage:"")+(m.qty<=0?" · 소진":"");
+    const qtyTxt=escH((Math.round(m.qty*10)/10)+(m.unit||"개")+(m.storage?" · "+m.storage:"")+(m.qty<=0?" · 소진":""));
     return `<div class="inv-item">
       <div class="top"><span class="nm">${escH(m.name)}</span><span class="badge plain">내 재료</span>${matchBadge}${expBadge}<span class="qty">${qtyTxt}</span></div>
       <div class="meta">${k?`앱 재료 <b>${ITEMS[k].name}</b>로 인식`
@@ -1517,10 +1526,32 @@ function loadLocal(){
 }
 function clearLocal(){ try{ localStorage.removeItem(LS_KEY); }catch(e){} }
 /* 예전 버전에서 저장된 입고 줄에는 id가 없다. 화면에서 고치고 지우려면 id가 있어야 한다. */
+/* 백업 파일이나 예전 기록으로 들어온 글자에서 태그 모양을 걷어낸다.
+   화면은 이미 이스케이프하지만, 남이 만든 파일을 열었을 때를 위한 두 번째 방어선이다. */
+function stripTags(v){
+  return typeof v==="string" ? v.replace(/<[^>]*>/g, "").slice(0, 2000) : v;
+}
+function sanitizeUserText(){
+  try{
+    for(const r of (Array.isArray(S.myRecipes)?S.myRecipes:[])){
+      r.name=stripTags(r.name); r.ing=stripTags(r.ing); r.tip=stripTags(r.tip);
+      if(Array.isArray(r.steps)) r.steps=r.steps.map(stripTags);
+    }
+    for(const m of (Array.isArray(S.myItems)?S.myItems:[])){
+      m.name=stripTags(m.name); m.unit=stripTags(m.unit); m.storage=stripTags(m.storage);
+    }
+    for(const x of (Array.isArray(S.shoplist)?S.shoplist:[])) x.name=stripTags(x.name);
+    for(const x of (Array.isArray(S.extraMeals)?S.extraMeals:[])) x.name=stripTags(x.name);
+    for(const p of (Array.isArray(S.myPresets)?S.myPresets:[])) p.name=stripTags(p.name);
+    for(const r of (Array.isArray(S.inbound)?S.inbound:[])) if(r&&r.label) r.label=stripTags(r.label);
+    S.nick=stripTags(S.nick);
+  }catch(e){}
+}
 function ensureInboundIds(){
   if(!Array.isArray(S.inbound)) { S.inbound=[]; return; }
   for(const r of S.inbound) if(r && !r.id) r.id=uid("ib");
   absorbAdj();
+  sanitizeUserText();
 }
 /* 구버전의 보이지 않던 재고 보정값(S.adj)을 눈에 보이는 기록 한 줄로 옮긴다. */
 function absorbAdj(){
@@ -1601,7 +1632,7 @@ function statsCardHtml(){
   if(!cs.length&&!mc.length) return "";
   return `<div class="card"><h2>🍳 요리 통계 <span class="sub">체크한 끼니 ${totalCooked}회</span></h2>
     ${cs.length?`<label class="f" style="margin-top:0">가장 많이 만든 메뉴</label>
-      ${cs.map(([mid,n],i)=>`<div class="order-row"><div><div class="nm">${i+1}. ${MEALS[mid].name}</div></div><div class="pr">${n}회</div></div>`).join("")}`:""}
+      ${cs.map(([mid,n],i)=>`<div class="order-row"><div><div class="nm">${i+1}. ${escH(MEALS[mid].name)}</div></div><div class="pr">${n}회</div></div>`).join("")}`:""}
     ${mc.length?`<label class="f">이번 달 많이 쓴 재료 (비용 기준)</label>
       ${mc.map(x=>`<div class="order-row"><div><div class="nm">${ITEMS[x.id].name}</div></div><div class="pr">${fmt(Math.round(x.c))}</div></div>`).join("")}`:""}
     <div class="tiny" style="margin-top:6px">체크(먹었어요)가 쌓일수록 정확해져요. 추천순 정렬에도 반영됩니다.</div>
@@ -1972,7 +2003,7 @@ function openRecipe(src,id){
     ? `<button class="btn" onclick="assignRecipeToday('${e.src}','${e.id}','lunch')">오늘 점심</button>
        <button class="btn" onclick="assignRecipeToday('${e.src}','${e.id}','dinner')">오늘 저녁</button>
        <button class="btn ghost" onclick="openRecipeEditor('${e.id}')">수정</button>
-       <button class="btn ghost" style="color:var(--crit)" onclick="deleteMyRecipe('${e.id}')">삭제</button>`
+       <button class="btn ghost" style="color:var(--crit-text)" onclick="deleteMyRecipe('${e.id}')">삭제</button>`
     : `<button class="btn" onclick="assignRecipeToday('${e.src}','${e.id}','lunch')">오늘 점심</button>
        <button class="btn primary" onclick="assignRecipeToday('${e.src}','${e.id}','dinner')">오늘 저녁</button>
        ${e.src==="lib"?`<button class="btn ghost" onclick="saveLibToMy('${e.id}')">⭐ 내 레시피로</button>`:""}`;
@@ -2416,7 +2447,7 @@ function shareMonthImage(){
 /* ============================================================ 렌더 ============================================================ */
 /* 입력 중인 칸은 render()로 화면을 다시 그려도 살아남아야 한다.
    (재고 탭에서 재료 이름을 치다가 다른 버튼을 누르면 통째로 지워지던 문제) */
-const KEEP_INPUTS = ["mi-name","mi-qty","mi-unit","mi-exp","xm-name","xm-kcal","xm-pro","sl-name","rs-name","rs-ing","rs-steps","rs-tip","rs-kcal","rs-pro","imp-code"];
+const KEEP_INPUTS = ["mi-name","mi-qty","mi-unit","mi-exp","xm-name","xm-kcal","xm-pro","sl-name","rs-name","rs-ing","rs-steps","rs-tip","rs-kcal","rs-pro","paste-code","re-name","re-ing","re-steps","re-tip","re-kcal","re-pro"];
 function snapInputs(){
   const o={};
   try{
@@ -2484,10 +2515,10 @@ function mealCard(slot, mid, dateS){
   const lack=Object.keys(m.use||{}).filter(id=>firstInbound(id)&&stockOf(id)<m.use[id]*0.9);
   return `<div class="card meal">
     <h2>${SLOT_LABEL[slot]}<span class="sub">${dateS} ${DOWK[dow(dateS)]}</span></h2>
-    <div class="name">${m.name}${m.modded?' <span class="badge plain">🔧 내 방식</span>':""}${m.mine?' <span class="badge plain">⭐ 내 레시피</span>':""}</div>
+    <div class="name">${escH(m.name)}${m.modded?' <span class="badge plain">🔧 내 방식</span>':""}${m.mine?' <span class="badge plain">⭐ 내 레시피</span>':""}</div>
     <div class="nutri">${m.kcal} kcal · 단백질 ${m.pro}g${svN()>1?` · 재료 ${svN()}인분`:""}</div>
-    <div class="muted">${m.ing}</div>
-    <div class="recipe">👨‍🍳 ${m.rcp}${m.steps?`<details class="rsteps"><summary>자세한 레시피 보기</summary><ol>${m.steps.map(x=>`<li>${x}</li>`).join("")}</ol>${m.tip?`<div class="rtip">💡 ${m.tip}</div>`:""}</details>`:""}</div>
+    <div class="muted">${escH(m.ing)}</div>
+    <div class="recipe">👨‍🍳 ${escH(m.rcp)}${m.steps?`<details class="rsteps"><summary>자세한 레시피 보기</summary><ol>${m.steps.map(x=>`<li>${escH(x)}</li>`).join("")}</ol>${m.tip?`<div class="rtip">💡 ${escH(m.tip)}</div>`:""}</details>`:""}</div>
     ${lack.length?`<div class="state-line">⚠️ 재고 확인: ${lack.map(id=>ITEMS[id].name).join(", ")}</div>`:""}
     ${(()=>{ const h=habitSuggest(mid); return h?`<div class="alertbox info" style="margin-top:9px;margin-bottom:0">🧠 <div>평소처럼 <b>${ITEMS[h.id].name.replace(/\(.*?\)/g,"").trim()} ${h.q}${ITEMS[h.id].unit}</b>를 추가할까요? <button class="btn sm" style="margin-left:6px;background:var(--surface-1)" onclick="applyHabitAdd('${mid}','${h.id}')">네, 추가</button></div></div>`:""; })()}
     <div class="btnrow">
@@ -2535,7 +2566,7 @@ function renderToday(){
   const mk=makeableMenus();
   if(mk.length){
     h+=`<div class="card"><h2>🍳 지금 만들 수 있는 메뉴 <span class="sub">현재 재고 기준</span></h2>
-      <div class="mk-list">${mk.slice(0,12).map(id=>`<span class="mk-item">${MEALS[id].name} <span class="tiny">${MEALS[id].kcal}k·P${MEALS[id].pro}</span></span>`).join("")}</div>
+      <div class="mk-list">${mk.slice(0,12).map(id=>`<span class="mk-item">${escH(MEALS[id].name)} <span class="tiny">${MEALS[id].kcal}k·P${MEALS[id].pro}</span></span>`).join("")}</div>
       ${mk.length>12?`<div class="tiny" style="margin-top:6px">외 ${mk.length-12}가지 더</div>`:""}</div>`;
   }
   /* 내 재료로 해먹기: 직접 산 재료 → 내장 레시피 매칭 + 미매칭은 레시피 검색 */
@@ -2551,7 +2582,7 @@ function renderToday(){
         const right=r.missing.length
           ? `<div class="links">${shopLinks(ITEMS[r.missing[0]].q)}</div>`
           : `<span class="badge good">지금 가능</span>`;
-        return `<div class="order-row"><div><div class="nm">${m.name}</div><div class="qy">${m.kcal}kcal · 단백질 ${m.pro}g · 내 재료(${mine}) 사용${r.missing.length?` · <span style="color:var(--serious)">부족: ${miss}</span>`:""}</div></div>${right}</div>`;
+        return `<div class="order-row"><div><div class="nm">${escH(m.name)}</div><div class="qy">${m.kcal}kcal · 단백질 ${m.pro}g · 내 재료(${mine}) 사용${r.missing.length?` · <span style="color:var(--serious)">부족: ${miss}</span>`:""}</div></div>${right}</div>`;
       }).join("");
       if(myRec.length>8) inner+=`<div class="tiny" style="margin-top:5px">외 ${myRec.length-8}가지 더 (재고 탭에서 재료를 정리하면 좁혀져요)</div>`;
     }
@@ -2573,7 +2604,7 @@ function renderToday(){
       const right=r.missing.length
         ? `<span class="qy" style="white-space:nowrap;color:var(--serious)">부족: ${r.missing.map(k=>ITEMS[k].name).join(", ")}</span>`
         : `<span class="badge good">지금 가능</span>`;
-      return `<div class="order-row"><div><div class="nm">${m.name}</div><div class="qy">${m.kcal}kcal · ${r.hits.map(k=>ITEMS[k].name).join(", ")} 소진</div></div>${right}</div>`;
+      return `<div class="order-row"><div><div class="nm">${escH(m.name)}</div><div class="qy">${m.kcal}kcal · ${r.hits.map(k=>ITEMS[k].name).join(", ")} 소진</div></div>${right}</div>`;
     }).join("");
     if(!ug.menus.length) inner+=`<div class="tiny">앱 레시피에 이 재료를 쓰는 메뉴가 없어요 — 위 '내 재료로 해먹기'의 검색 버튼을 활용하세요.</div>`;
     h+=`<div class="card"><h2>⏳ 먼저 써야 할 재료 <span class="sub">유통기한 D-3 이내</span></h2>${inner}</div>`;
@@ -2596,7 +2627,7 @@ function scheduleEditorHtml(){
       const on=!!S.schedule[slot][d];
       const mid=on?assignMenu(slot,d):null;
       return `<td><button class="scell ${on?"on":""}" onclick="toggleSlot('${slot}',${d})" aria-pressed="${on}">
-        ${on?`<span class="sc-name">${mid?MEALS[mid].name.replace(/ — .*/,""):""}</span>`:`<span class="sc-plus">+</span>`}</button></td>`;
+        ${on?`<span class="sc-name">${mid?escH(MEALS[mid].name.replace(/ — .*/,"")):""}</span>`:`<span class="sc-plus">+</span>`}</button></td>`;
     }).join("");
     const nut=dayNutrition(d);
     return `<tr><td class="sday">${dk}<div class="sn">${nut.kcal?nut.kcal.toLocaleString()+"k":""}</div></td>${cells}</tr>`;
@@ -2606,7 +2637,7 @@ function scheduleEditorHtml(){
     <h2>🗓️ 나의 식사 스케줄 <span class="sub">요일·시간대를 켜면 식단이 자동 생성</span></h2>
     <div class="chips">${Object.keys(PRESETS).map(n=>`<button class="chip" onclick="applyPreset('${n}')">${n}</button>`).join("")}</div>
     <div class="chips" style="margin-top:6px">${(S.myPresets||[]).map(p=>`<button class="chip" onclick="applyMyPreset('${p.id}')">💾 ${escH(p.name)}</button>`).join("")}<button class="chip" style="border:1.5px dashed var(--axis);background:transparent" onclick="saveMyPreset()">＋ 현재 스케줄 저장</button></div>
-    ${(S.myPresets||[]).length?`<div class="tiny" style="margin-top:4px">내 프리셋을 지우려면: ${(S.myPresets||[]).map(p=>`<a href="javascript:void(0)" onclick="deleteMyPreset('${p.id}')" style="color:var(--crit);text-decoration:none">「${escH(p.name)}」 삭제</a>`).join(" · ")}</div>`:""}
+    ${(S.myPresets||[]).length?`<div class="tiny" style="margin-top:4px">내 프리셋을 지우려면: ${(S.myPresets||[]).map(p=>`<a href="javascript:void(0)" onclick="deleteMyPreset('${p.id}')" style="color:var(--crit-text);text-decoration:none">「${escH(p.name)}」 삭제</a>`).join(" · ")}</div>`:""}
     <div class="sched-wrap"><table class="sched"><tr><th></th>${head}</tr>${rows}</table></div>
     <div class="tiny" style="margin-top:7px">스케줄을 바꿔도 <b>이미 지난 날의 기록은 그대로</b>예요. 바뀐 스케줄은 오늘부터 적용됩니다.<br>칸을 눌러 끼니를 켜고 끄세요. 시간(상단)을 누르면 내 식사 시간을 바꿀 수 있어요(알림은 아직 없어요). 끼니 수가 바뀌면 아래 예상 식비·주문·재고가 전부 따라 바뀝니다.</div>
   </div>`;
@@ -2620,7 +2651,7 @@ function renderPlan(){
     const parts=SLOT_ORDER.map(sl=>{
       if(!p[sl]) return `<button class="mpick off" onclick="openPicker(${i},'${sl}')"><b>${SLOT_SHORT[sl]}</b> +</button>`;
       const custom=!!(S.custom&&S.custom[i+"|"+sl]);
-      return `<button class="mpick ${custom?"custom":""}" onclick="openPicker(${i},'${sl}')"><b>${SLOT_SHORT[sl]}</b> ${MEALS[p[sl]].name}${custom?" ✎":""}</button>`;
+      return `<button class="mpick ${custom?"custom":""}" onclick="openPicker(${i},'${sl}')"><b>${SLOT_SHORT[sl]}</b> ${escH(MEALS[p[sl]].name)}${custom?" ✎":""}</button>`;
     }).join("");
     const tag = nut.kcal? (nut.kcal<DAILY_KCAL_FLOOR?` <span class="lowk">🔽 가벼움</span>`:"") : "";
     rows+=`<tr><td class="wd"><b>${DOWK[i]}</b><div class="n">${nut.kcal?nut.kcal.toLocaleString()+"k·P"+nut.pro:"—"}</div></td>
@@ -2668,9 +2699,9 @@ function renderPlan(){
   </div><div class="card">
     <h2>📖 전체 레시피 모음</h2>
     <div class="tiny" style="margin-bottom:4px">눌러서 펼쳐보세요. 오늘 탭의 각 끼니 카드에서도 같은 레시피가 열립니다.</div>
-    ${Object.values(MEALS).map(m=>`<details class="rsteps" style="margin-top:9px"><summary>${m.name} — ${m.kcal}kcal · P${m.pro}g</summary>
-      <div class="tiny" style="margin:5px 0 0">${m.ing}</div>
-      <ol>${(m.steps||[]).map(x=>`<li>${x}</li>`).join("")}</ol>${m.tip?`<div class="rtip">💡 ${m.tip}</div>`:""}</details>`).join("")}
+    ${Object.values(MEALS).map(m=>`<details class="rsteps" style="margin-top:9px"><summary>${escH(m.name)} — ${m.kcal}kcal · P${m.pro}g</summary>
+      <div class="tiny" style="margin:5px 0 0">${escH(m.ing)}</div>
+      <ol>${(m.steps||[]).map(x=>`<li>${escH(x)}</li>`).join("")}</ol>${m.tip?`<div class="rtip">💡 ${escH(m.tip)}</div>`:""}</details>`).join("")}
   </div>`;
 }
 function renderStock(){
@@ -2799,13 +2830,16 @@ function renderData(){
     <div class="muted">${lsAvailable()
       ?`✅ <b>자동 저장 켜짐</b> — 기록이 이 기기의 브라우저에 자동 저장돼서, 닫았다 다시 열어도 이어집니다. <b>기기를 바꾸거나 파일을 새로 받았을 때만</b> 내보내기→가져오기로 옮기세요. 만약을 대비한 백업용으로도 좋아요.`
       :`⚠️ 이 환경에서는 자동 저장이 안 돼요 — <b>기록이 생긴 날엔 내보내기</b>로 저장하고, 다음에 열 때 가져오면 이어집니다.`}</div>
+    <div class="tiny" style="margin-top:6px">내보내기 파일에는 <b>요리 사진도 함께</b> 담깁니다${(()=>{const n=(S.feedLocal||[]).filter(p=>p&&p.photo).length; return n?` (지금 ${n}장)`:"";})()}. 새 기기에서 가져오면 사진까지 그대로 이어져요.</div>
     <div class="btnrow">
       <button class="btn primary" onclick="exportFile()">📥 파일로 내보내기</button>
       <button class="btn" onclick="exportCode()">복사용 코드</button>
       <label class="btn" style="display:inline-block">📤 파일 가져오기<input type="file" accept=".json" style="display:none" onchange="importFile(this)"></label>
     </div>
-    <label class="f">또는 코드 붙여넣기 → 자동 복원</label>
-    <textarea id="paste-code" placeholder="내보낸 코드를 붙여넣으세요" oninput="importCode(this.value)"></textarea>
+    <label class="f">또는 코드 붙여넣기</label>
+    <textarea id="paste-code" placeholder="내보낸 코드를 붙여넣으세요"></textarea>
+    <div class="btnrow" style="margin-top:6px"><button class="btn" onclick="importPasted()">붙여넣은 코드로 복원</button></div>
+    <div class="tiny" style="margin-top:4px">복원하면 지금 기록이 전부 바뀌어요. 무엇이 들어오는지 먼저 보여 드리고, 바꾼 뒤에도 한 번은 되돌릴 수 있습니다.</div>
     <hr class="h">
     <label class="f">현재 설정</label>
     <div class="muted" style="font-size:13px">스케줄 주 <b>${mealsPerWeek()}끼</b> · 재료 <b>${S.tier}만 등급(${(TIERS[S.tier]||{name:"사용자"}).name})</b> → 예상 식재료비 <b>${fmt(monthlyEstimate())}</b> · 등급 목표 ${fmt(tierBudget())} · 재량 여유 ${fmt(Math.max(0,discretionaryRoom()))}.</div>
@@ -2818,7 +2852,7 @@ function renderData(){
     <div class="chips">${[1,2,3,4].map(n=>`<button class="chip ${svN()===n?"on":""}" onclick="S.servings=${n};render()">${n}인분</button>`).join("")}</div>
     <div class="tiny" style="margin-top:4px">재료 양·비용·재고 차감·장보기가 ×${svN()}로 계산돼요. 영양 표시는 1인분 기준 그대로예요.</div>
     <hr class="h">
-    <div class="btnrow"><button class="btn" style="color:var(--crit)" onclick="resetRecords()">기록 초기화</button>
+    <div class="btnrow"><button class="btn" style="color:var(--crit-text)" onclick="resetRecords()">기록 초기화</button>
       <button class="btn" onclick="if(confirm('스케줄을 기본(직장인)으로 되돌릴까요?')){S.schedule=defaultSchedule();S.times={...DEFAULT_TIMES};render();}">스케줄 기본값</button>
       <button class="btn" onclick="if(confirm('이 기기에 자동 저장된 데이터를 지울까요? (지금 화면의 상태는 유지되지만, 새로 열 때는 초기 상태로 시작해요)')){clearLocal();alert('자동 저장 데이터를 지웠어요.');}">자동 저장 지우기</button></div>
   </div>
@@ -3022,26 +3056,80 @@ function exportFile(){
   a.download="식단기록_"+todayStr()+".json"; a.click(); URL.revokeObjectURL(a.href);
 }
 function exportCode(){ prompt("이 코드를 메모장에 저장해 두세요. 다음에 왼쪽 위 ⚙︎ 설정의 가져오기 칸에 붙여넣으면 복원됩니다.", btoa(unescape(encodeURIComponent(exportPayload())))); }
-function applyImport(txt){
-  try{ const o=JSON.parse(txt);
-    if(o&&o.state&&Array.isArray(o.state.inbound)){ S={...S, tier:20, ...o.state};
-        if(!S.tier)S.tier=20; if(!S.schedule)S.schedule=defaultSchedule(); if(!S.times)S.times={...DEFAULT_TIMES}; if(!S.custom)S.custom={}; if(!S.kcalCap)S.kcalCap=DAILY_KCAL_CAP; if(!S.proTarget)S.proTarget=100; if(!S.favs)S.favs=[]; if(!S.shuffle)S.shuffle={};
-        for(const sl of SLOT_ORDER){ if(!Array.isArray(S.schedule[sl])) S.schedule[sl]=defaultSchedule()[sl]; }
-        ensureInboundIds();
-        if(!S.dayPlan || typeof S.dayPlan!=="object") S.dayPlan={};
-        render(); return true; }
-  }catch(e){}
-  return false;
+/* 지금 기록을 통째로 떠 둔다 — 가져오기를 되돌릴 때 쓴다 */
+function snapshotState(){
+  const o={};
+  for(const k of SYNC_KEYS) o[k]=JSON.parse(JSON.stringify(S[k]===undefined?null:S[k]));
+  o.feedLocal=JSON.parse(JSON.stringify(S.feedLocal||[]));
+  return o;
+}
+function restoreState(o){
+  for(const k of SYNC_KEYS) if(k in o && o[k]!==null) S[k]=o[k];
+  S.feedLocal=o.feedLocal||[];
+  saveFeed(); saveLocal();
+}
+/* 가져올 파일에 무엇이 들어 있는지 사람 말로 */
+function importSummary(o){
+  const st=(o&&o.state)||{}, n=a=>Array.isArray(a)?a.length:0;
+  return { saved:o.saved||"날짜 모름", inbound:n(st.inbound), eaten:n(st.eaten),
+           recipes:n(st.myRecipes), items:n(st.myItems),
+           photos:(Array.isArray(st.feedLocal)?st.feedLocal.filter(p=>p&&p.photo).length:0) };
+}
+function applyImport(txt, silent){
+  let o=null;
+  try{ o=JSON.parse(txt); }catch(e){ return false; }
+  if(!(o&&o.state&&Array.isArray(o.state.inbound))) return false;
+
+  if(!silent){
+    const now=snapshotState(), cur=(now.inbound||[]).length+(now.eaten||[]).length;
+    const sm=importSummary(o);
+    const msg="가져올 기록\n"
+      +"・저장한 날: "+sm.saved+"\n"
+      +"・입고·지출 "+sm.inbound+"건 · 먹은 기록 "+sm.eaten+"건\n"
+      +"・내 레시피 "+sm.recipes+"개 · 내 재료 "+sm.items+"개\n"
+      +(sm.photos?"・요리 사진 "+sm.photos+"장\n":"")
+      +"\n지금 이 기기의 기록"+(cur?"("+cur+"건)":"")+"은 전부 이걸로 바뀝니다.\n"
+      +"바꾼 뒤에도 [되돌리기]를 한 번 누르면 돌아올 수 있어요.\n\n계속할까요?";
+    if(!confirm(msg)) return false;
+  }
+
+  const prev=snapshotState();
+  S={...S, tier:20, ...o.state};
+  if(!S.tier)S.tier=20; if(!S.schedule)S.schedule=defaultSchedule(); if(!S.times)S.times={...DEFAULT_TIMES}; if(!S.custom)S.custom={}; if(!S.kcalCap)S.kcalCap=DAILY_KCAL_CAP; if(!S.proTarget)S.proTarget=100; if(!S.favs)S.favs=[]; if(!S.shuffle)S.shuffle={};
+  for(const sl of SLOT_ORDER){ if(!Array.isArray(S.schedule[sl])) S.schedule[sl]=defaultSchedule()[sl]; }
+  ensureInboundIds();
+  if(!S.dayPlan || typeof S.dayPlan!=="object") S.dayPlan={};
+  /* 사진은 별도 저장소에 있다. 여기서 쓰지 않으면 새로고침하는 순간 사라진다. */
+  if(!Array.isArray(S.feedLocal)) S.feedLocal=[];
+  saveFeed();
+  render();
+  /* 가져오기는 지금 바로 저장한다. 평소의 0.4초 지연 저장에 맡기면,
+     복원 직후 앱을 닫았을 때 사진만 남고 기록은 사라지는 어긋난 상태가 된다. */
+  saveLocal();
+  if(!silent){
+    const sm=importSummary(o);
+    toast("기록을 가져왔어요"+(sm.photos?" · 사진 "+sm.photos+"장":""), ()=>{ restoreState(prev); });
+  }
+  return true;
 }
 function importFile(inp){
   const f=inp.files[0]; if(!f)return;
   const r=new FileReader();
-  r.onload=()=>{ applyImport(r.result)?alert("복원 완료!"):alert("파일 형식을 읽지 못했어요."); };
+  r.onload=()=>{ if(!applyImport(r.result)) toast("파일 형식을 읽지 못했어요"); };
+  inp.value="";
   r.readAsText(f);
 }
+function importPasted(){
+  const el=$("paste-code"), v=((el&&el.value)||"").trim();
+  if(v.length<20){ toast("복원할 코드를 붙여넣어 주세요"); return; }
+  importCode(v);
+}
 function importCode(v){
-  v=v.trim(); if(v.length<20)return;
-  try{ if(applyImport(decodeURIComponent(escape(atob(v))))) alert("코드 복원 완료!"); }catch(e){}
+  v=String(v||"").trim(); if(v.length<20) return;
+  let txt=null;
+  try{ txt=decodeURIComponent(escape(atob(v))); }catch(e){ toast("코드를 읽지 못했어요"); return; }
+  if(!applyImport(txt)) toast("코드 형식이 맞지 않아요");
+  else { const el=$("paste-code"); if(el) el.value=""; }
 }
 function filterPicker(q){ S.pickerQuery=q; q=(q||"").trim();
   document.querySelectorAll("#picker-root .sheet-list .opt").forEach(el=>{
@@ -3096,7 +3184,7 @@ function renderPicker(){
       : sort==="urgent" && urgentUseScore(id,urg)>0 ? ` · ⏳임박재료 ${urgentUseScore(id,urg)}개 소진`
       : sort==="stock" ? ` · 재고활용 ${Math.round(stockScore(id)*100)}%` : "";
     return `<div class="opt-row"><button class="opt ${a.ok?"":"off"} ${sel?"cur":""}" ${a.ok?`onclick="chooseMenu(${d},'${slot}','${id}')"`:"disabled"}>
-      <span class="opt-nm">${isFav(id)?"⭐ ":""}${MEALS[id].name}${MEALS[id].modded?" 🔧":""}${MEALS[id].mine?' <span class="badge plain" style="font-size:10px">내 레시피</span>':""}${sel?" ✓":""}</span>
+      <span class="opt-nm">${isFav(id)?"⭐ ":""}${escH(MEALS[id].name)}${MEALS[id].modded?" 🔧":""}${MEALS[id].mine?' <span class="badge plain" style="font-size:10px">내 레시피</span>':""}${sel?" ✓":""}</span>
       <span class="opt-meta">${MEALS[id].kcal}kcal · P${MEALS[id].pro} · ${Math.round(menuCost(id)/sv).toLocaleString()}원${extra}${a.ok?"":" · "+a.reason}</span></button>
       <button class="fav-btn ${isFav(id)?"on":""}" onclick="toggleFav('${id}')" aria-label="즐겨찾기">${isFav(id)?"★":"☆"}</button></div>`;
   }).join("");
@@ -3168,7 +3256,7 @@ function applyTheme(){
   tb.title = S.theme==="auto"?"자동":S.theme==="light"?"라이트":"다크";
 }
 /* ============================================================ PWA — 설치·오프라인·업데이트 (웹주소로 열릴 때만 활성화, file://은 기존 그대로) ============================================================ */
-const APP_VER="25.0";
+const APP_VER="25.4";
 const IS_NATIVE=location.protocol==="capacitor:"||!!window.Capacitor;   // 앱스토어(iOS) 네이티브 셸
 const IS_HTTP=(location.protocol==="http:"||location.protocol==="https:")&&!IS_NATIVE;
 let _installEvt=null, _swWaiting=null;
