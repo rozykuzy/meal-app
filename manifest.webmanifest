@@ -1,0 +1,17 @@
+{
+  "name": "식단 매니저 — 한 달 식단·장보기",
+  "short_name": "식단 매니저",
+  "description": "유지 칼로리 기준 자동 식단, 쿠팡·컬리 최저가 장보기, 재고 자동 차감까지 한 파일로.",
+  "lang": "ko",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2f4f6",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
