@@ -1,6 +1,6 @@
 /* 식단 매니저 서비스워커 — 오프라인 캐시 + 업데이트
    새 버전 배포 시 VER만 올리면 됩니다(파일 교체 후). */
-const VER = "22.1.0";
+const VER = "23.0.0";
 const CACHE = "mealapp-" + VER;
 const ASSETS = [
   "./",
@@ -31,7 +31,7 @@ self.addEventListener("message", (e) => {
 
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
-  if (e.request.method !== "GET" || url.origin !== self.location.origin) return; // 외부(파이어베이스·쇼핑몰)는 그대로
+  if (e.request.method !== "GET" || url.origin !== self.location.origin) return; // 외부(폰트·쇼핑몰)는 그대로
   e.respondWith(
     caches.match(e.request, { ignoreSearch: true }).then((hit) => {
       const net = fetch(e.request).then((res) => {
