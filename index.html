@@ -204,6 +204,23 @@ details.rsteps li{margin-bottom:5px}
 .inv-item .ops a.shop{padding:5px 9px}
 /* order */
 .order-row{display:flex; align-items:center; gap:8px; padding:10px 0; border-bottom:1px solid var(--grid); font-size:13.5px}
+/* 입고·지출 내역 — 이름/금액 한 줄, 날짜/버튼 한 줄 */
+.led{padding:11px 0; border-bottom:1px solid var(--grid)}
+.led:last-child{border-bottom:0}
+.led-top{display:flex; align-items:baseline; gap:10px}
+.led-nm{font-weight:700; font-size:14px; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.led-pr{flex:none; font-weight:700; font-size:14px; font-variant-numeric:tabular-nums}
+.led-bot{display:flex; align-items:center; gap:8px; margin-top:5px}
+.led-sub{flex:1; min-width:0; font-size:11.5px; color:var(--ink-3); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.led-act{flex:none; display:flex; gap:5px}
+.led-act button{-webkit-appearance:none; appearance:none; border:1px solid var(--axis); background:var(--surface-1);
+  color:var(--ink-2); font-family:inherit; font-size:12px; font-weight:700; line-height:1;
+  padding:0 10px; height:32px; min-width:32px; border-radius:var(--r-cap); cursor:pointer;
+  touch-action:manipulation; white-space:nowrap; transition:background 100ms var(--ease-out-strong)}
+.led-act button:active{background:var(--grid)}
+.led-act button.del{color:var(--crit)}
+.led-batch{display:flex; align-items:center; gap:8px; margin:12px 0 2px; font-size:12.5px; color:var(--ink-2)}
+.led-batch b{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .order-row:last-child{border-bottom:0}
 .order-row .nm{font-weight:700}
 .order-row .qy{color:var(--ink-3); font-size:12px}
@@ -539,19 +556,42 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
    기기를 옮길 때는 [설정 → 기록 저장·복원]의 내보내기/가져오기를 사용합니다.
    ============================================================ */
 /* 내보내기·가져오기에 담는 상태 키 목록(테마·요리 사진 기록은 별도 저장) */
-const SYNC_KEYS = ["tier","schedule","times","custom","favs","shuffle","kcalCap","proTarget","inbound","skips","eaten","adj","myItems","shoplist","avoid","extraMeals","myRecipes","nick","menuMods","habits","cookStats","servings","myPresets"];
+const SYNC_KEYS = ["tier","schedule","times","custom","favs","shuffle","kcalCap","proTarget","inbound","skips","eaten","adj","myItems","shoplist","avoid","extraMeals","myRecipes","nick","menuMods","habits","cookStats","servings","myPresets","dayPlan","lastSeen"];
 /* 구 그룹 기능의 변경이력 훅 — 로컬 전용에선 기록할 곳이 없어 아무 것도 하지 않는다 */
 function logAction(){}
-/* 가벼운 토스트 알림 */
-function toast(msg){
+/* 가벼운 토스트 알림 — 두 번째 인자를 주면 [되돌리기] 버튼이 함께 뜬다 */
+let UNDO=null;
+function toastEl(){
+  let t=document.getElementById("toast-el");
+  if(!t){ t=document.createElement("div"); t.id="toast-el";
+    t.setAttribute("style","position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:200;background:rgba(20,22,26,.93);color:#fff;padding:10px 12px 10px 16px;border-radius:9999px;font-size:13.5px;font-weight:600;width:max-content;max-width:88vw;text-align:center;opacity:0;transition:opacity 180ms ease;display:flex;align-items:center;gap:10px;backdrop-filter:saturate(120%) blur(14px);-webkit-backdrop-filter:saturate(120%) blur(14px);box-shadow:0 1px 2px rgba(0,0,0,.18),0 12px 28px rgba(0,0,0,.28)");
+    document.body.appendChild(t); }
+  return t;
+}
+function hideToast(){ try{ const t=document.getElementById("toast-el"); if(t){ clearTimeout(t._h); t.style.opacity="0"; } }catch(e){} }
+function toast(msg, undoFn){
   try{
-    let t=document.getElementById("toast-el");
-    if(!t){ t=document.createElement("div"); t.id="toast-el";
-      t.setAttribute("style","position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:200;background:rgba(20,22,26,.93);color:#fff;padding:11px 16px;border-radius:12px;font-size:13.5px;font-weight:600;max-width:82vw;text-align:center;opacity:0;transition:opacity 180ms ease");
-      document.body.appendChild(t); }
-    t.textContent=msg; requestAnimationFrame(()=>{ t.style.opacity="1"; });
-    clearTimeout(t._h); t._h=setTimeout(()=>{ t.style.opacity="0"; }, 1900);
+    const t=toastEl();
+    if(typeof undoFn==="function"){
+      UNDO={fn:undoFn};
+      t.innerHTML='<span style="flex:1;text-align:left">'+escH(msg)+'</span>'+
+        '<button type="button" onclick="doUndo()" style="flex:none;-webkit-appearance:none;appearance:none;border:0;background:rgba(255,255,255,.16);color:#fff;font-weight:700;font-size:13px;padding:7px 12px;border-radius:9999px;cursor:pointer;touch-action:manipulation">되돌리기</button>';
+    }else{
+      UNDO=null;
+      t.innerHTML='<span style="flex:1;text-align:center">'+escH(msg)+'</span>';
+    }
+    requestAnimationFrame(()=>{ t.style.opacity="1"; });
+    clearTimeout(t._h); t._h=setTimeout(()=>{ t.style.opacity="0"; UNDO=null; }, undoFn?6000:1900);
   }catch(e){}
+}
+/* 되돌리기 — 그 동작이 만든 변화만 역으로 되돌린다 */
+function doUndo(){
+  const u=UNDO; UNDO=null;
+  if(!u){ hideToast(); return; }
+  try{ u.fn(); }catch(e){}
+  render();
+  /* 확인 토스트는 바로 띄운다. 지연시키면 그 사이에 생긴 새 되돌리기를 지워 버린다. */
+  toast("되돌렸어요");
 }
 /* ============================================================
    데이터 — 가격은 2026-07 다나와·에누리 최저가권 검증값(원)
@@ -1340,7 +1380,12 @@ function addMyItem(){
   render();
 }
 function adjustMyItem(id,delta){ const m=myItemsArr().find(x=>x.id===id); if(m){ m.qty=Math.max(0,Math.round((m.qty+delta)*10)/10); render(); } }
-function removeMyItem(id){ S.myItems=myItemsArr().filter(x=>x.id!==id); render(); }
+function removeMyItem(id){
+  const arr=myItemsArr(), i=arr.findIndex(x=>x.id===id); if(i<0) return;
+  const gone=arr[i];
+  S.myItems=arr.filter(x=>x.id!==id); render();
+  toast("「"+gone.name+"」 삭제", ()=>{ const a=myItemsArr(); a.splice(Math.min(i,a.length),0,gone); S.myItems=a; });
+}
 function myStockCard(){
   const items=myItemsArr();
   const list = items.length ? `<div class="inv" style="margin-top:2px">`+items.map(m=>{
@@ -1465,10 +1510,28 @@ function loadLocal(){
     if(o.state.theme) S.theme=o.state.theme;
     if(!S.schedule) S.schedule=defaultSchedule();
     for(const sl of SLOT_ORDER){ if(!Array.isArray(S.schedule[sl])) S.schedule[sl]=defaultSchedule()[sl]; }
+    ensureInboundIds();
+    if(!S.dayPlan || typeof S.dayPlan!=="object") S.dayPlan={};
     return true;
   }catch(e){ return false; }
 }
 function clearLocal(){ try{ localStorage.removeItem(LS_KEY); }catch(e){} }
+/* 예전 버전에서 저장된 입고 줄에는 id가 없다. 화면에서 고치고 지우려면 id가 있어야 한다. */
+function ensureInboundIds(){
+  if(!Array.isArray(S.inbound)) { S.inbound=[]; return; }
+  for(const r of S.inbound) if(r && !r.id) r.id=uid("ib");
+  absorbAdj();
+}
+/* 구버전의 보이지 않던 재고 보정값(S.adj)을 눈에 보이는 기록 한 줄로 옮긴다. */
+function absorbAdj(){
+  if(!S.adj || typeof S.adj!=="object") { S.adj={}; return; }
+  const t=todayStr();
+  for(const id of Object.keys(S.adj)){
+    const g=+S.adj[id]||0;
+    if(g && ITEMS[id]) S.inbound.push({id:uid("ib"), adjust:true, legacy:true, date:t, itemId:id, packs:g/ITEMS[id].pack, price:0});
+    delete S.adj[id];
+  }
+}
 /* ============================================================ 추가로 먹은 것 (계획 밖 섭취) ============================================================ */
 function extrasOf(dS){ return (S.extraMeals||[]).filter(x=>x.date===dS); }
 function addExtraMeal(){
@@ -1620,7 +1683,7 @@ function shopLinks(q){
 }
 /* ============================================================ 상태·엔진 ============================================================ */
 function defaultSchedule(){ return {brk:[1,0,0,0,0,0,1], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[0,1,1,1,1,1,0]}; }
-let S = { tier: 20, schedule: defaultSchedule(), times: {...DEFAULT_TIMES}, custom: {}, picker: null, favs: [], shuffle: {}, kcalCap: DAILY_KCAL_CAP, proTarget: 100, inbound: [], skips: [], eaten: [], adj: {}, myItems: [], shoplist: [], avoid: [], extraMeals: [], myRecipes: [], nick: "", feedLocal: [], menuMods: {}, habits: {}, cookStats: {}, servings: 1, myPresets: [], theme: "auto" };
+let S = { tier: 20, schedule: defaultSchedule(), times: {...DEFAULT_TIMES}, custom: {}, picker: null, favs: [], shuffle: {}, kcalCap: DAILY_KCAL_CAP, proTarget: 100, inbound: [], skips: [], eaten: [], adj: {}, myItems: [], shoplist: [], avoid: [], extraMeals: [], myRecipes: [], nick: "", feedLocal: [], menuMods: {}, habits: {}, cookStats: {}, servings: 1, myPresets: [], dayPlan: {}, lastSeen: "", theme: "auto" };
 /* ============================================================
    메뉴 레이어 엔진 — 렌더 직전에 MEALS를 [원본→내 레시피→재료 커스텀→인원수] 순으로 다시 입힘.
    그래서 재료를 추가/빼면 영양·재고차감·비용·장보기·추천이 전부 자동 반영된다.
@@ -1742,10 +1805,48 @@ const parseD = s => new Date(s+"T00:00:00");
 const addDays = (s,n) => { const d=parseD(s); d.setDate(d.getDate()+n); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
 const dow = s => parseD(s).getDay();
 const DOWK = ["일","월","화","수","목","금","토"];
-const slotsOf = dateS => { const d=dow(dateS); const p=planFor(d); const r=[]; for(const slot of SLOT_ORDER){ if(p[slot]) r.push([slot,p[slot]]); } return r; }; // 커스텀 선택·내 레시피까지 반영(오늘탭·재고차감·리포트 일관성)
+/* 그날의 끼니 목록.
+   지난 날은 '그때 굳힌 계획'을, 오늘·앞날은 지금 스케줄을 쓴다.
+   덕분에 스케줄을 바꿔도 지난 달력·연속일수·지난 재고 차감은 흔들리지 않는다. */
+const slotsOf = dateS => {
+  const f = S.dayPlan && S.dayPlan[dateS];
+  if(f){
+    const r=[];
+    for(const slot of SLOT_ORDER){ const mid=f[slot]; if(mid && MEALS[mid]) r.push([slot,mid]); }
+    return r;
+  }
+  const p=planFor(dow(dateS)); const r=[];
+  for(const slot of SLOT_ORDER){ if(p[slot]) r.push([slot,p[slot]]); }
+  return r;
+};
+/* 오늘 기준으로 그날의 계획을 그대로 찍어 둔다 */
+function snapshotDay(dateS){
+  const p=planFor(dow(dateS)), o={};
+  for(const slot of SLOT_ORDER) if(p[slot]) o[slot]=p[slot];
+  return o;
+}
+/* 하루가 지나면 그날의 계획을 굳힌다.
+   마지막으로 앱을 연 날부터 어제까지를 채운다(오래 안 열었으면 최근 90일만). */
+const FREEZE_MAX_DAYS = 90;
+function freezePastDays(){
+  try{
+    if(!S.dayPlan || typeof S.dayPlan!=="object") S.dayPlan={};
+    const t=todayStr(), last=S.lastSeen;
+    if(last && last<t){
+      let from=last;
+      const floor=addDays(t,-FREEZE_MAX_DAYS);
+      if(from<floor) from=floor;
+      for(let d=from; d<t; d=addDays(d,1)) if(!S.dayPlan[d]) S.dayPlan[d]=snapshotDay(d);
+    }
+    S.lastSeen=t;
+    /* 아주 오래된 기록은 덜어 낸다(400일) */
+    const keep=addDays(t,-400);
+    for(const d of Object.keys(S.dayPlan)) if(d<keep) delete S.dayPlan[d];
+  }catch(e){}
+}
 
 function firstInbound(id){ let f=null; for(const r of S.inbound) if(r.itemId===id&&(!f||r.date<f)) f=r.date; return f; }
-function lastInbound(id){ let l=null; for(const r of S.inbound) if(r.itemId===id&&(!l||r.date>l.date)) l=r; return l; }
+function lastInbound(id){ let l=null; for(const r of S.inbound) if(r.itemId===id&&!r.adjust&&(!l||r.date>l.date)) l=r; return l; }
 function plannedUseBetween(id, fromS, toS){
   if(!fromS) return 0;
   let t=0;
@@ -1757,10 +1858,11 @@ function plannedUseBetween(id, fromS, toS){
   }
   return t;
 }
-function stockOf(id){
-  const bought=S.inbound.filter(r=>r.itemId===id).reduce((a,r)=>a+r.packs*ITEMS[id].pack,0);
-  return Math.max(0, bought - plannedUseBetween(id, firstInbound(id), todayStr()) + (S.adj[id]||0));
+function rawStockOf(id){
+  const bought=S.inbound.filter(r=>r.itemId===id).reduce((a,r)=>a+(r.packs||0)*ITEMS[id].pack,0);
+  return bought - plannedUseBetween(id, firstInbound(id), todayStr()) + (S.adj[id]||0);
 }
+function stockOf(id){ return Math.max(0, rawStockOf(id)); }
 function dailyNeed(id){
   let t=0, d0=todayStr();
   for(let i=1;i<=7;i++){ const d=addDays(d0,i);
@@ -1936,10 +2038,17 @@ function saveMyRecipe(id){
   rebuildUserMeals(); closeRSheet(); render();
 }
 function deleteMyRecipe(id){
-  if(!confirm("이 레시피를 삭제할까요?")) return;
-  S.myRecipes=(S.myRecipes||[]).filter(x=>x.id!==id);
-  for(const k of Object.keys(S.custom||{})) if(S.custom[k]==="ur_"+id) delete S.custom[k];
+  const arr=(S.myRecipes||[]), i=arr.findIndex(x=>x.id===id); if(i<0) return;
+  const gone=arr[i], usedAt={};
+  S.myRecipes=arr.filter(x=>x.id!==id);
+  for(const k of Object.keys(S.custom||{})) if(S.custom[k]==="ur_"+id){ usedAt[k]=S.custom[k]; delete S.custom[k]; }
   rebuildUserMeals(); closeRSheet(); render();
+  toast("「"+gone.name+"」 레시피 삭제", ()=>{
+    if(!Array.isArray(S.myRecipes)) S.myRecipes=[];
+    S.myRecipes.splice(Math.min(i,S.myRecipes.length),0,gone);
+    for(const k of Object.keys(usedAt)) S.custom[k]=usedAt[k];
+    rebuildUserMeals();
+  });
 }
 /* ============================================================ 피드 — 사진·레시피 공유(방 단위)·좋아요·댓글 ============================================================ */
 const FEED_KEY="mealapp_feed_v1", DEV_KEY="mealapp_dev";
@@ -2305,8 +2414,36 @@ function shareMonthImage(){
   }, "image/jpeg", .92);
 }
 /* ============================================================ 렌더 ============================================================ */
+/* 입력 중인 칸은 render()로 화면을 다시 그려도 살아남아야 한다.
+   (재고 탭에서 재료 이름을 치다가 다른 버튼을 누르면 통째로 지워지던 문제) */
+const KEEP_INPUTS = ["mi-name","mi-qty","mi-unit","mi-exp","xm-name","xm-kcal","xm-pro","sl-name","rs-name","rs-ing","rs-steps","rs-tip","rs-kcal","rs-pro","imp-code"];
+function snapInputs(){
+  const o={};
+  try{
+    const a=document.activeElement;
+    o._focus = a && a.id && KEEP_INPUTS.includes(a.id) ? a.id : null;
+    o._sel = o._focus && a.selectionStart!=null ? [a.selectionStart, a.selectionEnd] : null;
+    for(const id of KEEP_INPUTS){ const el=document.getElementById(id); if(el && el.value!=="") o[id]=el.value; }
+  }catch(e){}
+  return o;
+}
+function restoreInputs(o){
+  try{
+    for(const id of KEEP_INPUTS){
+      if(!(id in o)) continue;
+      const el=document.getElementById(id);
+      if(el && el.value==="") el.value=o[id];
+    }
+    if(o._focus){
+      const el=document.getElementById(o._focus);
+      if(el){ el.focus(); if(o._sel && el.setSelectionRange){ try{ el.setSelectionRange(o._sel[0], o._sel[1]); }catch(e){} } }
+    }
+  }catch(e){}
+}
 function render(){
+  const _keep=snapInputs();
   rebuildUserMeals();
+  freezePastDays();
   const t=todayStr(), p=planFor(dow(t));
   const est=monthlyEstimate();
   $("hd-date").textContent = t+" ("+DOWK[dow(t)]+") · 식재료 "+fmt(est)+"/월";
@@ -2322,6 +2459,7 @@ function render(){
   $("t-expiry").textContent=(expiringSoon().length+myExpiring().length)+"개";
   renderAlerts(); renderToday(); renderPlan(); renderStock(); renderOrder(); renderData(); renderRecipes(); renderCal();
   renderPicker();
+  restoreInputs(_keep);
   scheduleSaveLocal();
 }
 function renderAlerts(){
@@ -2355,7 +2493,7 @@ function mealCard(slot, mid, dateS){
     <div class="btnrow">
       <button class="btn ${eaten?"primary":""}" onclick="markEaten('${key}')">${eaten?"✓ 먹었어요":"먹었어요"}</button>
       <button class="btn ${skipped?"primary":"ghost"}" onclick="markSkip('${key}')">${skipped?"↩︎ 건너뜀 취소":"건너뜀(외식 등)"}</button>
-      <button class="btn ghost" onclick="openPicker(${dow(dateS)},'${slot}')">메뉴 바꾸기</button>
+      <button class="btn ghost" onclick="openPicker(${dow(dateS)},'${slot}')">매주 ${DOWK[dow(dateS)]}요일 ${SLOT_SHORT[slot]} 바꾸기</button>
       <button class="btn ghost" onclick="openCustomize('${mid}')">${m.modded?"🔧 내 방식":"재료 커스텀"}</button>
     </div>
   </div>`;
@@ -2470,7 +2608,7 @@ function scheduleEditorHtml(){
     <div class="chips" style="margin-top:6px">${(S.myPresets||[]).map(p=>`<button class="chip" onclick="applyMyPreset('${p.id}')">💾 ${escH(p.name)}</button>`).join("")}<button class="chip" style="border:1.5px dashed var(--axis);background:transparent" onclick="saveMyPreset()">＋ 현재 스케줄 저장</button></div>
     ${(S.myPresets||[]).length?`<div class="tiny" style="margin-top:4px">내 프리셋을 지우려면: ${(S.myPresets||[]).map(p=>`<a href="javascript:void(0)" onclick="deleteMyPreset('${p.id}')" style="color:var(--crit);text-decoration:none">「${escH(p.name)}」 삭제</a>`).join(" · ")}</div>`:""}
     <div class="sched-wrap"><table class="sched"><tr><th></th>${head}</tr>${rows}</table></div>
-    <div class="tiny" style="margin-top:7px">칸을 눌러 끼니를 켜고 끄세요. 시간(상단)을 누르면 알림 기준 시간을 바꿀 수 있어요. 끼니 수가 바뀌면 아래 예상 식비·주문·재고가 전부 따라 바뀝니다.</div>
+    <div class="tiny" style="margin-top:7px">스케줄을 바꿔도 <b>이미 지난 날의 기록은 그대로</b>예요. 바뀐 스케줄은 오늘부터 적용됩니다.<br>칸을 눌러 끼니를 켜고 끄세요. 시간(상단)을 누르면 내 식사 시간을 바꿀 수 있어요(알림은 아직 없어요). 끼니 수가 바뀌면 아래 예상 식비·주문·재고가 전부 따라 바뀝니다.</div>
   </div>`;
 }
 function renderPlan(){
@@ -2600,6 +2738,7 @@ function renderOrder(){
     <div class="muted">실제 지출 <b>${fmt(sp)}</b> / 등급 목표 ${fmt(bud)} · 남음 <b style="color:${remain<0?"var(--crit)":"var(--good-text)"}">${fmt(remain)}</b><br>예상 식재료비 <b>${fmt(est)}</b> · 재량 여유 ${discretionaryRoom()>=0?fmt(discretionaryRoom()):`<span style="color:var(--crit)">-${fmt(-discretionaryRoom())}</span>`}</div>
     <div style="height:8px;background:var(--grid);border-radius:5px;margin-top:8px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(100,sp/Math.max(1,bud)*100)}%;background:${sp>bud?"var(--crit)":"var(--accent)"}"></i></div>
     <div class="tiny" style="margin-top:6px">예상 식재료비는 <b>[식단표]의 스케줄·선택·등급</b>에서 자동 계산돼요(외식·구독 등 재량은 별도). 첫 시작은 저장식품(쌀·김치·양념) 때문에 아래 <b>첫 달 팁</b>도 참고하세요.</div></div>`;
+  h+=ledgerCardHtml();
   if(need.length){
     h+=`<div class="card"><h2>⚠️ 지금 주문 필요</h2>${orderRows(need)}
       <div class="total-line"><span>합계</span><span>${fmt(groupTotal(need))}</span></div>
@@ -2610,8 +2749,8 @@ function renderOrder(){
     h+=`<div class="card"><h2>${GROUPS[g].label}<span class="sub">${fmt(groupTotal(ids))}</span></h2>
       <div class="tiny" style="margin-bottom:6px">${GROUPS[g].note}</div>${orderRows(ids)}
       <div class="btnrow">
-        <button class="btn" onclick="copyList('${g}')">주문 목록 복사</button>
-        <button class="btn primary" onclick="inboundGroup('${ids.join(",")}')">전체 입고 처리(도착 후)</button>
+        <button class="btn" onclick="copyList('${g}','${ids.join(",")}')">주문 목록 복사</button>
+        <button class="btn primary" onclick="inboundGroup('${ids.join(",")}')">${ids.length}개 전체 입고 처리(도착 후)</button>
       </div></div>`;
   }
   const need2=monthlyItemNeed();
@@ -2679,7 +2818,7 @@ function renderData(){
     <div class="chips">${[1,2,3,4].map(n=>`<button class="chip ${svN()===n?"on":""}" onclick="S.servings=${n};render()">${n}인분</button>`).join("")}</div>
     <div class="tiny" style="margin-top:4px">재료 양·비용·재고 차감·장보기가 ×${svN()}로 계산돼요. 영양 표시는 1인분 기준 그대로예요.</div>
     <hr class="h">
-    <div class="btnrow"><button class="btn" style="color:var(--crit)" onclick="if(confirm('입고·기록을 지울까요? (스케줄·티어는 유지)')){S={...S,inbound:[],skips:[],eaten:[],adj:{},extraMeals:[]};render();}">기록 초기화</button>
+    <div class="btnrow"><button class="btn" style="color:var(--crit)" onclick="resetRecords()">기록 초기화</button>
       <button class="btn" onclick="if(confirm('스케줄을 기본(직장인)으로 되돌릴까요?')){S.schedule=defaultSchedule();S.times={...DEFAULT_TIMES};render();}">스케줄 기본값</button>
       <button class="btn" onclick="if(confirm('이 기기에 자동 저장된 데이터를 지울까요? (지금 화면의 상태는 유지되지만, 새로 열 때는 초기 상태로 시작해요)')){clearLocal();alert('자동 저장 데이터를 지웠어요.');}">자동 저장 지우기</button></div>
   </div>
@@ -2691,7 +2830,7 @@ function renderData(){
     ④ 평일 간식(계란+바나나)은 기본 포함 — 안 먹은 날만 건너뜀<br>
     ⑤ 재고가 실제와 다르면 [재고]에서 ＋/− 보정<br>
     ⑥ 소진·유통기한 경고 뜨면 [주문]에서 링크로 재주문<br>
-    ⑦ 기록은 이 기기에 <b>자동 저장</b> — 기기를 바꿀 때만 [데이터]에서 내보내기<br>⑧ 예산이 바뀌면 티어를 바꾸면 식단·주문 목록이 함께 바뀝니다</div></div>
+    ⑦ 기록은 이 기기에 <b>자동 저장</b> — 기기를 바꿀 때만 왼쪽 위 ⚙︎ 설정에서 내보내기<br>⑧ 예산이 바뀌면 티어를 바꾸면 식단·주문 목록이 함께 바뀝니다</div></div>
   <div class="tiny" style="text-align:center;margin:14px 0 4px">식단 매니저 v${APP_VER} · 개인용 무료 앱</div>`;
 }
 /* ============================================================ 동작 ============================================================ */
@@ -2709,34 +2848,172 @@ function markEaten(k){
 }
 function markSkip(k){ const i=S.skips.indexOf(k); if(i>=0)S.skips.splice(i,1); else{S.skips.push(k); const j=S.eaten.indexOf(k); if(j>=0)S.eaten.splice(j,1);} render(); }
 
-function adjust(id,dir){ S.adj[id]=(S.adj[id]||0)+dir*ITEMS[id].step; logAction(ITEMS[id].name+" 재고 "+(dir>0?"＋":"－")+"보정"); render(); }
+function adjust(id,dir){
+  const it=ITEMS[id]; if(!it) return;
+  let delta=dir*it.step;
+  if(delta<0){
+    const have=rawStockOf(id);
+    if(have<=0){ toast(it.name+"은 이미 0이에요"); return; }
+    delta=-Math.min(-delta, have);            /* 0 아래로는 내려가지 않는다 */
+  }
+  const rec={id:uid("ib"), adjust:true, date:todayStr(), itemId:id, packs:delta/it.pack, price:0};
+  S.inbound.push(rec);
+  logAction(it.name+" 재고 "+(dir>0?"＋":"－")+"보정");
+  render();
+  toast(it.name+" "+(delta>0?"＋":"−")+fmtAmt(id, Math.abs(delta)), ()=>{ dropInbound([rec]); });
+}
+/* 재료 양을 사람이 읽는 단위로 */
+function fmtAmt(id, g){
+  const it=ITEMS[id]; if(!it) return String(g);
+  if(it.unit==="g") return g>=1000 ? (g/1000).toFixed(1)+"kg" : Math.round(g)+"g";
+  return (Math.round(g*10)/10)+it.unit;
+}
 function extraSpend(label, def){
   const p=prompt(label+" — 실제 결제금액(원)을 입력하세요.", def);
   if(p===null) return;
-  S.inbound.push({date:todayStr(), itemId:"extra", packs:0, price:+p||0, label});
+  const won=Math.max(0, Math.round(+String(p).replace(/[^0-9.-]/g,"")||0));
+  const rec={id:uid("ib"), date:todayStr(), itemId:"extra", packs:0, price:won, label};
+  S.inbound.push(rec);
   render();
+  toast(label+" "+won.toLocaleString()+"원 기록", ()=>{ dropInbound([rec]); });
 }
 function inboundOne(id){
-  const p=prompt(ITEMS[id].name+" 입고 — 실제 결제금액(원)을 입력하세요. 취소하면 표준가로 기록됩니다.", ITEMS[id].price);
-  S.inbound.push({date:todayStr(), itemId:id, packs:1, price: p===null?ITEMS[id].price:(+p||0)});
+  const p=prompt(ITEMS[id].name+" 입고 — 실제 결제금액(원)을 입력하세요.\n그대로 확인하면 표준가로 기록됩니다. 취소하면 입고하지 않아요.", ITEMS[id].price);
+  if(p===null) return;
+  const rec={id:uid("ib"), date:todayStr(), itemId:id, packs:1, price: Math.max(0, Math.round(+String(p).replace(/[^0-9.-]/g,"")||0))};
+  S.inbound.push(rec);
   logAction(ITEMS[id].name+" 입고");
   render();
+  toast(ITEMS[id].name+" 입고 · "+rec.price.toLocaleString()+"원", ()=>{ dropInbound([rec]); });
+}
+/* 방금 넣은 입고 줄을 정확히 그것만 뺀다(참조 → id 순으로 찾는다) */
+function dropInbound(recs){
+  for(const r of recs){
+    let i=S.inbound.indexOf(r);
+    if(i<0 && r && r.id) i=S.inbound.findIndex(x=>x && x.id===r.id);
+    if(i>=0) S.inbound.splice(i,1);
+  }
+}
+/* ── 입고·지출 내역 — 화면에서 직접 보고 고치고 지운다 ───────────────── */
+function inboundName(r){
+  if(r.itemId==="extra") return r.label||"따로 쓴 돈";
+  const nm=(ITEMS[r.itemId]&&ITEMS[r.itemId].name)||r.itemId;
+  return r.adjust ? nm+" 재고 보정" : nm;
+}
+function inboundQty(r){
+  if(r.itemId==="extra"||!ITEMS[r.itemId]) return "";
+  const it=ITEMS[r.itemId];
+  if(r.adjust){
+    const g=(r.packs||0)*it.pack;
+    return (g>0?"＋":"−")+fmtAmt(r.itemId, Math.abs(g))+(r.legacy?" · 예전 기록에서 옮김":"");
+  }
+  return (r.packs||0)+"팩 · "+it.packLabel;
+}
+function deleteInbound(id){
+  const i=S.inbound.findIndex(r=>r&&r.id===id); if(i<0) return;
+  const gone=S.inbound[i];
+  S.inbound.splice(i,1); render();
+  toast(inboundName(gone)+" 기록 삭제", ()=>{ S.inbound.splice(Math.min(i,S.inbound.length),0,gone); });
+}
+function deleteInboundBatch(bid){
+  const gone=S.inbound.map((r,i)=>({r,i})).filter(x=>x.r&&x.r.batch===bid);
+  if(!gone.length) return;
+  if(!confirm("이 장보기로 들어온 "+gone.length+"개 기록을 전부 지울까요?")) return;
+  S.inbound=S.inbound.filter(r=>!(r&&r.batch===bid)); render();
+  toast(gone.length+"개 기록 삭제", ()=>{ for(const x of gone) S.inbound.splice(Math.min(x.i,S.inbound.length),0,x.r); });
+}
+function editInboundPrice(id){
+  const r=S.inbound.find(x=>x&&x.id===id); if(!r) return;
+  const p=prompt(inboundName(r)+" — 실제 결제금액(원)", r.price||0);
+  if(p===null) return;
+  const before=r.price||0;
+  r.price=Math.max(0, Math.round(+String(p).replace(/[^0-9.-]/g,"")||0));
+  render();
+  toast("금액을 "+r.price.toLocaleString()+"원으로 고쳤어요", ()=>{ r.price=before; });
+}
+function editInboundPacks(id, delta){
+  const r=S.inbound.find(x=>x&&x.id===id); if(!r||r.itemId==="extra") return;
+  const before=r.packs||0;
+  const next=Math.max(0, before+delta);
+  if(next===before) return;
+  r.packs=next;
+  if(next===0){ deleteInbound(id); return; }
+  render();
+  toast(inboundName(r)+" "+next+"팩", ()=>{ r.packs=before; });
+}
+function toggleLedger(){ S.ledgerAll=!S.ledgerAll; render(); }
+function ledgerCardHtml(){
+  const all=(S.inbound||[]).slice().sort((a,b)=> (b.date||"").localeCompare(a.date||"") || String(b.id||"").localeCompare(String(a.id||"")));
+  if(!all.length) return `<div class="card"><h2>🧾 입고·지출 내역</h2>
+    <div class="muted">아직 기록이 없어요. 물건이 도착하면 [입고 처리]를 누르세요. 잘못 눌러도 여기서 바로 지울 수 있습니다.</div></div>`;
+  const m=todayStr().slice(0,7);
+  const showAll=!!S.ledgerAll;
+  const rows=showAll?all:all.filter(r=>(r.date||"").slice(0,7)===m);
+  const monthTotal=all.filter(r=>(r.date||"").slice(0,7)===m).reduce((a,r)=>a+(r.price||0),0);
+  const older=all.length-all.filter(r=>(r.date||"").slice(0,7)===m).length;
+  const seenBatch={};
+  const body = rows.length ? rows.map(r=>{
+    const q=inboundQty(r);
+    let head="";
+    if(r.batch && !seenBatch[r.batch]){
+      seenBatch[r.batch]=1;
+      const grp=all.filter(x=>x&&x.batch===r.batch);
+      head=`<div class="led-batch">
+        <b>🛒 ${r.date} 장보기 ${grp.length}건 · ${fmt(grp.reduce((a,x)=>a+(x.price||0),0))}</b>
+        <span class="led-act"><button class="del" onclick="deleteInboundBatch('${r.batch}')">묶음 삭제</button></span></div>`;
+    }
+    const packable = r.itemId!=="extra" && ITEMS[r.itemId] && !r.adjust;
+    return head+`<div class="led">
+      <div class="led-top">
+        <span class="led-nm">${escH(inboundName(r))}</span>
+        <span class="led-pr">${fmt(r.price||0)}</span>
+      </div>
+      <div class="led-bot">
+        <span class="led-sub">${r.date}${q?" · "+q:""}</span>
+        <span class="led-act">
+          ${packable?`<button onclick="editInboundPacks('${r.id}',-1)" aria-label="한 팩 줄이기">−</button><button onclick="editInboundPacks('${r.id}',1)" aria-label="한 팩 늘리기">＋</button>`:""}
+          ${r.adjust?"":`<button onclick="editInboundPrice('${r.id}')">금액</button>`}
+          <button class="del" onclick="deleteInbound('${r.id}')">삭제</button>
+        </span>
+      </div></div>`;
+  }).join("") : `<div class="muted">이번 달 기록이 없어요.</div>`;
+  return `<div class="card"><h2>🧾 입고·지출 내역 <span class="sub">${showAll?"전체 "+all.length+"건":"이번 달 "+fmt(monthTotal)}</span></h2>
+    <div class="tiny" style="margin-bottom:6px">잘못 들어온 줄은 여기서 지우세요. 지우면 재고와 이번 달 식비가 함께 정확해집니다.</div>
+    ${body}
+    ${older>0?`<div class="btnrow" style="margin-top:8px"><button class="btn ghost" onclick="toggleLedger()">${showAll?"이번 달만 보기":"지난 기록도 보기 ("+older+"건)"}</button></div>`:""}
+  </div>`;
 }
 function inboundGroup(csv){
-  const ids=csv.split(",");
+  const ids=String(csv||"").split(",").filter(id=>ITEMS[id]);
+  if(!ids.length){ toast("입고할 품목이 없어요"); return; }
   const total=groupTotal(ids);
-  const p=prompt("총 "+ids.length+"개 품목 입고 — 실제 결제 총액(원)을 입력하세요. 취소하면 표준가("+total.toLocaleString()+"원)로 나눠 기록합니다.", total);
-  const ratio=p===null?1:(+p||0)/total;
+  const p=prompt("총 "+ids.length+"개 품목 입고 — 실제 결제 총액(원)을 입력하세요.\n그대로 확인하면 표준가("+total.toLocaleString()+"원)로 나눠 기록합니다. 취소하면 입고하지 않아요.", total);
+  if(p===null) return;
+  const paid=Math.max(0, Math.round(+String(p).replace(/[^0-9.-]/g,"")||0));
+  const ratio=total>0 ? paid/total : 0;
   const d=todayStr();
-  for(const id of ids) S.inbound.push({date:d, itemId:id, packs:1, price:Math.round(ITEMS[id].price*ratio)});
+  const added=[];
+  const bid=uid("bt");   /* 같은 장보기로 들어온 줄들을 한 묶음으로 표시하기 위한 배치 id */
+  for(const id of ids){ const rec={id:uid("ib"), batch:bid, date:d, itemId:id, packs:1, price:Math.round(ITEMS[id].price*ratio)}; S.inbound.push(rec); added.push(rec); }
   logAction("장보기 "+ids.length+"개 품목 입고");
-  alert("입고 완료! 재고·유통기한·지출이 기록됐어요. [데이터] 탭에서 내보내기로 저장해 두세요.");
   render();
+  const won=added.reduce((a,r)=>a+r.price,0);
+  toast(ids.length+"개 입고 · "+won.toLocaleString()+"원", ()=>{ dropInbound(added); });
+  /* 되돌리기 시간이 지난 뒤에도 [주문] 탭 맨 위 내역에서 한 줄씩 지울 수 있다 */
 }
-function copyList(g){
-  const ids=Object.keys(ITEMS).filter(id=>ITEMS[id].group===g);
+function copyList(g,csv){
+  const ids=(csv!==undefined && csv!==null && csv!=="") ? String(csv).split(",").filter(id=>ITEMS[id])
+            : Object.keys(ITEMS).filter(id=>ITEMS[id].group===g);
+  if(!ids.length){ alert("이 카드에는 복사할 품목이 없어요."); return; }
   const txt=GROUPS[g].label+"\n"+ids.map(id=>`- ${ITEMS[id].name} ${ITEMS[id].packLabel} (약 ${ITEMS[id].price.toLocaleString()}원) → 검색어: ${ITEMS[id].q}`).join("\n");
-  navigator.clipboard?.writeText(txt).then(()=>alert("주문 목록을 복사했어요. 쿠팡·컬리 검색창에 붙여넣어 쓰세요.")).catch(()=>prompt("복사해서 쓰세요:",txt));
+  navigator.clipboard?.writeText(txt).then(()=>alert(ids.length+"개 품목("+GROUPS[g].label+")을 복사했어요. 쿠팡·컬리 검색창에 붙여넣어 쓰세요.")).catch(()=>prompt("복사해서 쓰세요:",txt));
+}
+function resetRecords(){
+  if(!confirm("입고·지출·재고 조정과 함께 달력의 먹은 기록도 전부 지워집니다. 계속할까요? (스케줄·티어는 유지)")) return;
+  const prev={inbound:S.inbound, skips:S.skips, eaten:S.eaten, adj:{...(S.adj||{})}, extraMeals:S.extraMeals, dayPlan:S.dayPlan};
+  S={...S, inbound:[], skips:[], eaten:[], adj:{}, extraMeals:[], dayPlan:{}};
+  render();
+  toast("기록을 지웠어요", ()=>{ S={...S, ...prev}; });
 }
 function exportPayload(){ return JSON.stringify({v:2, saved:todayStr(), state:S}); }
 function exportFile(){
@@ -2744,12 +3021,14 @@ function exportFile(){
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   a.download="식단기록_"+todayStr()+".json"; a.click(); URL.revokeObjectURL(a.href);
 }
-function exportCode(){ prompt("이 코드를 메모장에 저장해 두세요. 다음에 [데이터] 탭에 붙여넣으면 복원됩니다.", btoa(unescape(encodeURIComponent(exportPayload())))); }
+function exportCode(){ prompt("이 코드를 메모장에 저장해 두세요. 다음에 왼쪽 위 ⚙︎ 설정의 가져오기 칸에 붙여넣으면 복원됩니다.", btoa(unescape(encodeURIComponent(exportPayload())))); }
 function applyImport(txt){
   try{ const o=JSON.parse(txt);
     if(o&&o.state&&Array.isArray(o.state.inbound)){ S={...S, tier:20, ...o.state};
         if(!S.tier)S.tier=20; if(!S.schedule)S.schedule=defaultSchedule(); if(!S.times)S.times={...DEFAULT_TIMES}; if(!S.custom)S.custom={}; if(!S.kcalCap)S.kcalCap=DAILY_KCAL_CAP; if(!S.proTarget)S.proTarget=100; if(!S.favs)S.favs=[]; if(!S.shuffle)S.shuffle={};
         for(const sl of SLOT_ORDER){ if(!Array.isArray(S.schedule[sl])) S.schedule[sl]=defaultSchedule()[sl]; }
+        ensureInboundIds();
+        if(!S.dayPlan || typeof S.dayPlan!=="object") S.dayPlan={};
         render(); return true; }
   }catch(e){}
   return false;
@@ -2772,7 +3051,13 @@ function openPicker(d,slot){ S.picker={d:+d,slot}; S.pickerQuery=""; renderPicke
 function closePicker(){ S.picker=null; renderPicker(); }
 function chooseMenu(d,slot,id){ S.schedule[slot][+d]=1; S.custom[(+d)+"|"+slot]=id; S.picker=null; if(MEALS[id]) logAction(DOWK[+d]+"요일 "+SLOT_SHORT[slot]+" → '"+MEALS[id].name+"'"); render(); }
 function autoPick(d,slot){ S.schedule[slot][+d]=1; delete S.custom[(+d)+"|"+slot]; S.picker=null; render(); }
-function skipMeal(d,slot){ S.schedule[slot][+d]=0; delete S.custom[(+d)+"|"+slot]; S.picker=null; render(); }
+function skipMeal(d,slot){
+  const k=(+d)+"|"+slot, prevOn=S.schedule[slot][+d], prevCustom=S.custom[k];
+  S.schedule[slot][+d]=0; delete S.custom[k]; S.picker=null; render();
+  toast("매주 "+DOWK[+d]+"요일 "+SLOT_SHORT[slot]+"을 껐어요", ()=>{
+    S.schedule[slot][+d]=prevOn; if(prevCustom!==undefined) S.custom[k]=prevCustom;
+  });
+}
 /* 피커 정렬: 같은 기준을 다시 누르면 방향이 뒤집힌다 */
 const PSORT_DEF={rec:-1, protein:-1, kcal:1, price:1, time:1, stock:-1, urgent:-1};
 function setPickerSort(m){
@@ -2824,8 +3109,8 @@ function renderPicker(){
       <div class="sheet-h"><b>${DOWK[d]}요일 · ${SLOT_SHORT[slot]}</b><button class="sheet-x" onclick="closePicker()" aria-label="닫기">✕</button></div>
       <div class="tiny" style="margin:-2px 0 8px">이 끼니에 쓸 수 있는 열량 여유 <b>약 ${remain.toLocaleString()}kcal</b> — 다른 끼니를 거르면 더 늘어나요.</div>
       <button class="opt skip ${on?"":"cur"}" onclick="skipMeal(${d},'${slot}')">
-        <span class="opt-nm">🚫 안 먹음 (거르기)${on?"":" ✓"}</span>
-        <span class="opt-meta">이 날 ${SLOT_SHORT[slot]}을 건너뜁니다 · 남은 끼니 열량·예산 여유 ↑</span></button>
+        <span class="opt-nm">🚫 매주 ${DOWK[d]}요일 ${SLOT_SHORT[slot]} 끄기${on?"":" ✓"}</span>
+        <span class="opt-meta">이 요일의 ${SLOT_SHORT[slot]}이 매주 꺼집니다${isCustom?" · 골라 둔 메뉴도 지워져요":""} · 남은 끼니 열량·예산 여유 ↑</span></button>
       <button class="opt auto ${on&&!isCustom?"cur":""}" onclick="autoPick(${d},'${slot}')">
         <span class="opt-nm">✨ 자동 추천${on&&!isCustom?" ✓":""}</span>
         <span class="opt-meta">칼로리·예산에 맞춰 자동 배정</span></button>
@@ -2844,9 +3129,11 @@ function go(v){
 function setTier(t){ S.tier=t; render(); }
 function toggleSlot(slot,d){ S.schedule[slot][d]=S.schedule[slot][d]?0:1; render(); }
 function applyPreset(name){ const p=PRESETS[name]; if(!p) return;
+  const prevS=JSON.parse(JSON.stringify(S.schedule)), prevT={...S.times};
   S.schedule={brk:[...p.brk],lunch:[...p.lunch],dinner:[...p.dinner],snack:[...p.snack]};
   if(p.times) S.times={...S.times, ...p.times};
-  render(); }
+  render();
+  toast("「"+name+"」 스케줄로 바꿨어요", ()=>{ S.schedule=prevS; S.times=prevT; }); }
 /* 내 스케줄 프리셋 — 생활 패턴을 이름 붙여 저장·전환 */
 function saveMyPreset(){
   const name=prompt("이 스케줄의 이름을 지어 주세요. (예: 야근 주간, 운동 주간)"); if(!name||!name.trim()) return;
@@ -2856,12 +3143,17 @@ function saveMyPreset(){
   render();
 }
 function applyMyPreset(id){ const p=(S.myPresets||[]).find(x=>x.id===id); if(!p) return;
-  S.schedule=JSON.parse(JSON.stringify(p.schedule)); S.times={...p.times}; render(); }
-function deleteMyPreset(id){ if(!confirm("이 프리셋을 삭제할까요?")) return;
-  S.myPresets=(S.myPresets||[]).filter(x=>x.id!==id); render(); }
+  const prevS=JSON.parse(JSON.stringify(S.schedule)), prevT={...S.times};
+  S.schedule=JSON.parse(JSON.stringify(p.schedule)); S.times={...p.times}; render();
+  toast("「"+p.name+"」 스케줄로 바꿨어요", ()=>{ S.schedule=prevS; S.times=prevT; }); }
+function deleteMyPreset(id){
+  const arr=(S.myPresets||[]), i=arr.findIndex(x=>x.id===id); if(i<0) return;
+  const gone=arr[i];
+  S.myPresets=arr.filter(x=>x.id!==id); render();
+  toast("「"+gone.name+"」 프리셋 삭제", ()=>{ if(!Array.isArray(S.myPresets)) S.myPresets=[]; S.myPresets.splice(Math.min(i,S.myPresets.length),0,gone); }); }
 function editTime(slot){
   const cur=S.times[slot]||DEFAULT_TIMES[slot];
-  const v=prompt(SLOT_SHORT[slot]+" 시간 (예: 08:00) — 알림 기준입니다.", cur);
+  const v=prompt(SLOT_SHORT[slot]+" 시간 (예: 08:00) — 내 식사 시간이에요. 알림은 아직 없습니다.", cur);
   if(v===null) return;
   const m=/^([01]?\d|2[0-3]):([0-5]\d)$/.exec(v.trim());
   if(!m){ alert("시간 형식은 HH:MM 이에요 (예: 07:30)"); return; }
@@ -2876,7 +3168,7 @@ function applyTheme(){
   tb.title = S.theme==="auto"?"자동":S.theme==="light"?"라이트":"다크";
 }
 /* ============================================================ PWA — 설치·오프라인·업데이트 (웹주소로 열릴 때만 활성화, file://은 기존 그대로) ============================================================ */
-const APP_VER="24.4";
+const APP_VER="25.0";
 const IS_NATIVE=location.protocol==="capacitor:"||!!window.Capacitor;   // 앱스토어(iOS) 네이티브 셸
 const IS_HTTP=(location.protocol==="http:"||location.protocol==="https:")&&!IS_NATIVE;
 let _installEvt=null, _swWaiting=null;
