@@ -395,6 +395,16 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
 .rc-bd{flex:1; display:flex; flex-direction:column; gap:1px; min-width:0}
 .rc-nm{font-size:14.5px; font-weight:700}
 .rc-meta{font-size:11.5px; color:var(--ink-3)}
+/* 카드 상단 줄: 라벨 + 공유 아이콘 하나 (스포티파이 문법) */
+.cal-top{display:flex; align-items:center; gap:8px}
+.cal-top .cal-eyebrow{flex:1; min-width:0}
+.cal-share{flex:0 0 auto; width:44px; height:44px; border:0; border-radius:var(--r-cap);
+  background:var(--grid); color:var(--ink-1); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  margin:-8px -6px -8px 0; transition:transform var(--dur) var(--ease-spring), background-color var(--dur-fast) ease}
+.cal-share svg{width:21px; height:21px; stroke:currentColor; fill:none; stroke-width:1.9;
+  stroke-linecap:round; stroke-linejoin:round}
+.cal-share:active{transform:scale(.88)}
+@media (hover:hover){ .cal-share:hover{background:var(--axis)} }
 /* 링 그라디언트 — 테마 액센트를 그대로 따른다 */
 #ringgrad .g0{stop-color:var(--accent)}
 #ringgrad .g1{stop-color:var(--accent-2)}
@@ -2084,7 +2094,12 @@ function renderCal(){
 
   const streak=streakDays();
   const head=`<div class="card calcard">
-    <div class="cal-eyebrow">MEAL RECORD</div>
+    <div class="cal-top">
+      <div class="cal-eyebrow">MEAL RECORD</div>
+      <button class="cal-share" onclick="shareMonthImage()" aria-label="이번 달 기록 공유">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4"/><path d="M8.5 7.5 12 4l3.5 3.5"/><path d="M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5"/></svg>
+      </button>
+    </div>
     <div class="cal-head">
       <button class="cal-nav" onclick="calPrev()" aria-label="이전 달">‹</button>
       <div class="ym">${yy}년 ${mm}월</div>
@@ -2100,9 +2115,6 @@ function renderCal(){
     <div class="cal-legend">
       <span><i style="background:#0a84ff"></i>계획한 끼니를 다 먹으면 꽉 참</span>
       <span>🔒 지난 날짜는 고칠 수 없어요</span>
-    </div>
-    <div class="btnrow">
-      <button class="btn primary" style="flex:1" onclick="shareMonthImage()">📤 스토리로 공유</button>
     </div>
   </div>`;
 
@@ -2268,11 +2280,29 @@ function shareMonthImage(){
   x.fillStyle=MUTE; x.font="800 28px sans-serif"; x.fillText("식단 매니저", W/2+4, H-272);
   ls("0px");
 
+  /* 네이티브 공유 시트로 넘긴다 — 인스타 스토리·메시지가 그 시트에 바로 뜬다.
+     iOS는 '사용자 탭' 문맥에서만 share를 허용하므로 비동기 toBlob을 쓰지 않고
+     toDataURL(동기)로 같은 틱 안에서 File을 만든다. */
+  const fname="식단기록_"+ym+".jpg";
+  let file=null;
+  try{
+    const url=C.toDataURL("image/jpeg", .92);
+    const bin=atob(url.split(",")[1]);
+    const buf=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
+    file=new File([buf], fname, {type:"image/jpeg"});
+  }catch(e){}
+  if(file && navigator.canShare && navigator.canShare({files:[file]})){
+    navigator.share({files:[file]}).catch(()=>{});   /* 사용자가 닫으면 조용히 끝낸다 */
+    return;
+  }
+  /* 공유를 지원하지 않는 환경 — 내려받기로 폴백 */
   C.toBlob(blob=>{
+    if(!blob){ toast("이미지를 만들지 못했어요"); return; }
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-    a.download="식단기록_"+ym+".png"; a.click(); URL.revokeObjectURL(a.href);
+    a.download=fname; a.click(); URL.revokeObjectURL(a.href);
     toast("이미지를 저장했어요 · 스토리에 올려 보세요");
-  });
+  }, "image/jpeg", .92);
 }
 /* ============================================================ 렌더 ============================================================ */
 function render(){
@@ -2846,7 +2876,7 @@ function applyTheme(){
   tb.title = S.theme==="auto"?"자동":S.theme==="light"?"라이트":"다크";
 }
 /* ============================================================ PWA — 설치·오프라인·업데이트 (웹주소로 열릴 때만 활성화, file://은 기존 그대로) ============================================================ */
-const APP_VER="24.3";
+const APP_VER="24.4";
 const IS_NATIVE=location.protocol==="capacitor:"||!!window.Capacitor;   // 앱스토어(iOS) 네이티브 셸
 const IS_HTTP=(location.protocol==="http:"||location.protocol==="https:")&&!IS_NATIVE;
 let _installEvt=null, _swWaiting=null;
