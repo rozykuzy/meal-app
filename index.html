@@ -26,6 +26,12 @@
   --ease-spring:cubic-bezier(.34,1.56,.64,1);
   --dur-fast:100ms; --dur:200ms; --dur-slow:300ms;
   --r-sm:8px; --r-md:16px; --r-lg:20px; --r-cap:9999px;
+  /* 러닝 앱 문법 — 표면 그라디언트 · 액센트 그라디언트 · 글로우 (라이트) */
+  --card-a:#ffffff; --card-b:#f4f7fb; --card-rim:rgba(255,255,255,.9);
+  --accent-2:#4db8ff; --accent-grad:linear-gradient(135deg,#0071e3 0%,#4db8ff 100%);
+  --glow:0 2px 10px rgba(0,113,227,.22); --glow-soft:0 0 6px rgba(0,113,227,.12);
+  --accent-halo:rgba(0,113,227,.09); --ring-glow:none;
+  --label:#8b95a3;
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
@@ -41,6 +47,11 @@
   --rim-hi:rgba(255,255,255,.16); --rim-lo:rgba(255,255,255,.04); --sheen:rgba(255,255,255,.10);
   --elev:0 2px 8px rgba(0,0,0,.34), 0 1px 2px rgba(0,0,0,.20);
   --elev-float:0 8px 28px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.3);
+  --card-a:#191c22; --card-b:#0d0f13; --card-rim:rgba(255,255,255,.10);
+  --accent:#0a84ff; --accent-2:#64d2ff; --accent-grad:linear-gradient(135deg,#0a84ff 0%,#64d2ff 100%);
+  --glow:0 2px 14px rgba(10,132,255,.42); --glow-soft:0 0 10px rgba(10,132,255,.35);
+  --accent-halo:rgba(10,132,255,.20); --ring-glow:drop-shadow(0 0 5px rgba(10,132,255,.45));
+  --label:#79828f;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -57,6 +68,11 @@
     --rim-hi:rgba(255,255,255,.16); --rim-lo:rgba(255,255,255,.04); --sheen:rgba(255,255,255,.10);
     --elev:0 2px 8px rgba(0,0,0,.34), 0 1px 2px rgba(0,0,0,.20);
     --elev-float:0 8px 28px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.3);
+    --card-a:#191c22; --card-b:#0d0f13; --card-rim:rgba(255,255,255,.10);
+    --accent:#0a84ff; --accent-2:#64d2ff; --accent-grad:linear-gradient(135deg,#0a84ff 0%,#64d2ff 100%);
+    --glow:0 2px 14px rgba(10,132,255,.42); --glow-soft:0 0 10px rgba(10,132,255,.35);
+    --accent-halo:rgba(10,132,255,.20); --ring-glow:drop-shadow(0 0 5px rgba(10,132,255,.45));
+    --label:#79828f;
   }
 }
 html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; overflow-x:clip; touch-action:manipulation }
@@ -88,12 +104,18 @@ header.app .date{color:var(--ink-3); font-size:11.5px; letter-spacing:0; margin-
 /* stat tiles */
 .tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin:4px 0 14px}
 @media (max-width:560px){ .tiles{grid-template-columns:repeat(2,1fr)} }
-.tile{background:var(--surface-1); border:1px solid var(--ring); border-radius:var(--r-lg); padding:14px 15px; box-shadow:var(--elev)}
-.tile .k{font-size:12px; color:var(--ink-3); margin-bottom:3px; font-weight:600}
-.tile .v{font-size:22px; font-weight:800; letter-spacing:-.5px}
+.tile{background:linear-gradient(158deg,var(--card-a) 0%,var(--card-b) 100%); border:1px solid var(--ring);
+  border-radius:var(--r-lg); padding:15px 15px 14px; box-shadow:var(--elev), inset 0 1px 0 var(--card-rim)}
+/* ── 지표 표기(라벨 + 숫자) — 앱 전체 공통 ── */
+.cal-eyebrow, .tile .k, .cal-stat .k{font-size:10px; color:var(--label); font-weight:800; letter-spacing:.13em}
+.tile .k, .cal-stat .k{margin-bottom:5px}
+.tile .v, .cal-stat .v{font-size:27px; font-weight:900; letter-spacing:-1.2px; line-height:1.05;
+  font-variant-numeric:tabular-nums; color:var(--ink-1)}
+.tile .v span, .cal-stat .v span{font-size:13px; font-weight:700; color:var(--label); margin-left:2px; letter-spacing:0}
+
 .tile .s{font-size:11.5px; color:var(--ink-2); margin-top:1px}
 .tile .bar{height:7px; background:var(--grid); border-radius:5px; margin-top:9px; overflow:hidden}
-.tile .bar i{display:block; height:100%; background:var(--accent); border-radius:5px}
+.tile .bar i{display:block; height:100%; background:var(--accent-grad); border-radius:5px; box-shadow:var(--glow-soft)}
 /* tabs */
 nav.tabs{position:fixed; bottom:calc(10px + env(safe-area-inset-bottom)); left:12px; right:12px; max-width:600px; margin:0 auto;
   background:linear-gradient(var(--glass-tint),var(--glass-tint)), var(--navbar);
@@ -111,10 +133,10 @@ nav.tabs button .ico{width:23px; height:23px; display:block}
 nav.tabs button .ico svg{width:23px; height:23px; display:block; stroke:currentColor; fill:none; stroke-width:1.8}
 nav.tabs button.on{color:var(--navbar-on); font-weight:800; background:var(--accent-soft); box-shadow:inset 0 1px 0 var(--rim-hi)}
 /* cards */
-.card{background:var(--surface-1); border:1px solid var(--ring); border-radius:var(--r-lg); padding:17px 18px; margin-bottom:12px;
-  box-shadow:var(--elev)}
-.card h2{font-size:15.5px; margin:0 0 10px; display:flex; align-items:center; gap:7px; font-weight:800; letter-spacing:-.2px}
-.card h2 .sub{font-weight:500; font-size:12px; color:var(--ink-3); margin-left:auto}
+.card{background:linear-gradient(158deg,var(--card-a) 0%,var(--card-b) 100%); border:1px solid var(--ring);
+  border-radius:var(--r-lg); padding:17px 18px; margin-bottom:12px; box-shadow:var(--elev), inset 0 1px 0 var(--card-rim)}
+.card h2{font-size:15.5px; margin:0 0 11px; display:flex; align-items:center; gap:7px; font-weight:800; letter-spacing:-.2px}
+.card h2 .sub{font-weight:800; font-size:10px; color:var(--label); margin-left:auto; letter-spacing:.1em}
 .muted{color:var(--ink-2); font-size:13.5px}
 .tiny{color:var(--ink-3); font-size:12px}
 hr.h{border:0; border-top:1px solid var(--grid); margin:12px 0}
@@ -128,7 +150,7 @@ hr.h{border:0; border-top:1px solid var(--grid); margin:12px 0}
   .btn.primary:hover{filter:brightness(1.06)}
   a.shop:hover{filter:brightness(.96)}
 }
-.btn.primary{background:var(--accent); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.28)}
+.btn.primary{background:var(--accent-grad); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.28), var(--glow)}
 .btn.dark{background:var(--ink-1); color:var(--surface-1)}
 .btn.ghost{background:transparent; color:var(--accent)}
 .btn.sm{padding:8px 13px; font-size:12.5px; border-radius:var(--r-cap); min-height:0; font-weight:600; background:var(--grid)}
@@ -173,7 +195,7 @@ details.rsteps li{margin-bottom:5px}
 .inv-item .nm{font-weight:700; font-size:14px}
 .inv-item .qty{margin-left:auto; font-size:12.5px; color:var(--ink-2); white-space:nowrap; font-variant-numeric:tabular-nums}
 .inv-item .bar{height:7px; background:var(--axis); border-radius:5px; margin:8px 0 6px; overflow:hidden}
-.inv-item .bar i{display:block; height:100%; border-radius:5px; background:var(--accent)}
+.inv-item .bar i{display:block; height:100%; border-radius:5px; background:var(--accent-grad); box-shadow:var(--glow-soft)}
 .inv-item .meta{display:flex; gap:6px; flex-wrap:wrap; align-items:center; font-size:11.5px; color:var(--ink-3)}
 /* 버튼이 늘어난 줄(쿠팡·컬리·레시피 보기·수량·삭제)은 다음 줄로 넘겨 글자가 쪼개지지 않게 한다 */
 .inv-item .ops{margin-left:auto; display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end; align-items:center}
@@ -232,7 +254,7 @@ label.f{display:block; font-size:12.5px; color:var(--ink-2); margin:11px 0 5px; 
 .chip{flex:0 0 auto; border:0; background:var(--grid); color:var(--ink-2);
   border-radius:var(--r-cap); padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer;
   transition:transform var(--dur) var(--ease-spring), background-color var(--dur-fast) ease, color var(--dur-fast) ease}
-.chip.on{background:var(--accent); color:#fff; font-weight:700}
+.chip.on{background:var(--accent-grad); color:#fff; font-weight:800; box-shadow:var(--glow-soft)}
 .chip:active{transform:scale(.95)}
 table.tiers{width:100%; border-collapse:collapse; font-size:12px}
 table.tiers td{padding:6px 4px; border-bottom:1px solid var(--grid); vertical-align:top}
@@ -355,13 +377,13 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
   border-radius:9px; cursor:pointer; color:#fff; font-size:14px; line-height:1; padding:0;
   transition:transform 120ms var(--ease-out-strong), background-color 120ms ease}
 .shop-chk:active{transform:scale(.9)}
-.shop-row.done .shop-chk{background:var(--accent); border-color:var(--accent)}
+.shop-row.done .shop-chk{background:var(--accent-grad); border-color:transparent; box-shadow:var(--glow-soft)}
 .shop-row .snm{flex:1; font-size:14.5px; font-weight:600}
 .shop-row.done .snm{color:var(--ink-3); text-decoration:line-through}
 /* 월별 지출 미니 차트 */
 .mbars{display:flex; gap:16px; align-items:flex-end; padding:6px 2px 0}
 .mbar{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; color:var(--ink-3)}
-.mbar i{display:block; width:28px; background:var(--accent); border-radius:7px 7px 3px 3px}
+.mbar i{display:block; width:28px; background:var(--accent-grad); border-radius:7px 7px 3px 3px; box-shadow:var(--glow-soft)}
 .mbar b{color:var(--ink-1); font-size:11px; font-variant-numeric:tabular-nums}
 /* 레시피 탭 */
 .rc-list{display:flex; flex-direction:column}
@@ -373,7 +395,68 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
 .rc-bd{flex:1; display:flex; flex-direction:column; gap:1px; min-width:0}
 .rc-nm{font-size:14.5px; font-weight:700}
 .rc-meta{font-size:11.5px; color:var(--ink-3)}
-/* 피드 */
+/* 링 그라디언트 — 테마 액센트를 그대로 따른다 */
+#ringgrad .g0{stop-color:var(--accent)}
+#ringgrad .g1{stop-color:var(--accent-2)}
+/* 캘린더(기록) — 앱 공통 카드 위에 활동 링. 지표 표기는 아래 공통 규칙을 함께 쓴다. */
+/* 캘린더 카드는 다른 카드와 같은 표면을 쓴다. 다른 점은 우상단 액센트 후광 하나뿐. */
+.calcard{position:relative; overflow:hidden}
+.calcard::before{content:""; position:absolute; top:-160px; right:-130px; width:340px; height:340px; border-radius:50%;
+  background:radial-gradient(circle, var(--accent-halo) 0%, transparent 70%); pointer-events:none}
+.calcard > *{position:relative}
+.calcard .cal-head{margin-top:8px}
+.calcard .cal-head .ym{font-size:19px}
+.cal-cell.full svg{filter:var(--ring-glow)}
+/* 캘린더(기록) — 애플 건강 앱 활동 링 문법 */
+.cal-head{display:flex; align-items:center; gap:10px; margin-bottom:2px}
+.cal-head .ym{font-size:17px; font-weight:800; letter-spacing:-.3px; flex:1; text-align:center}
+.cal-nav{border:0; background:var(--grid); color:var(--ink-1); width:36px; height:36px; border-radius:var(--r-cap);
+  font-size:15px; cursor:pointer; flex:0 0 auto; transition:transform var(--dur) var(--ease-spring)}
+.cal-nav:active{transform:scale(.9)}
+.cal-nav:disabled{opacity:.35; cursor:default}
+.cal-dowk{display:grid; grid-template-columns:repeat(7,1fr); margin:12px 0 4px}
+.cal-dowk span{text-align:center; font-size:11px; font-weight:700; color:var(--ink-3)}
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:7px 2px}
+.cal-cell{position:relative; border:0; background:none; padding:2px 0; cursor:pointer; display:flex;
+  align-items:center; justify-content:center; transition:transform var(--dur) var(--ease-spring)}
+.cal-cell:active{transform:scale(.88)}
+.cal-cell.blank{visibility:hidden; pointer-events:none}
+.cal-cell.none{cursor:default}
+.cal-cell svg{display:block; width:100%; height:auto; max-width:40px}
+.cal-cell .dn{position:absolute; font-size:11.5px; font-weight:700; color:var(--ink-2); font-variant-numeric:tabular-nums}
+.cal-cell.full .dn{color:var(--accent); font-weight:800}
+.cal-cell.today .dn{color:var(--accent)}
+.cal-cell.fut .dn{color:var(--ink-3); opacity:.5}
+.cal-legend{display:flex; gap:10px 14px; flex-wrap:wrap; margin-top:14px; font-size:11.5px; color:var(--ink-3)}
+.cal-legend i{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:4px; vertical-align:middle}
+.cal-stats{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:8px; margin:16px 0 4px; align-items:start}
+.cal-stat{background:transparent; padding:0}
+.cal-stat:first-child .v{font-size:38px; letter-spacing:-1.8px}
+/* 날짜 상세 시트 */
+.day-hero{display:flex; align-items:center; gap:14px; padding:4px 0 12px}
+.day-hero svg{flex:0 0 auto; width:76px; height:76px}
+.day-hero .t{font-size:16px; font-weight:800; letter-spacing:-.3px}
+.day-hero .s{font-size:12.5px; color:var(--ink-2); margin-top:3px}
+.day-lock{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700;
+  color:var(--ink-3); background:var(--grid); border-radius:var(--r-cap); padding:3px 10px; margin-top:6px}
+.day-slot{display:flex; align-items:center; gap:9px; padding:11px 0; border-bottom:1px solid var(--grid)}
+.day-slot:last-of-type{border-bottom:0}
+.day-slot .sl{flex:0 0 38px; font-size:11.5px; font-weight:700; color:var(--ink-3)}
+.day-slot .nm{flex:1; font-size:14px; font-weight:600; min-width:0}
+.day-slot.done .nm{color:var(--ink-1)}
+.day-slot.skip .nm{color:var(--ink-3); text-decoration:line-through}
+.day-mark{flex:0 0 auto; width:28px; height:28px; border-radius:50%; border:1.8px solid var(--axis);
+  background:var(--surface-1); color:#fff; font-size:14px; line-height:1; padding:0; cursor:pointer;
+  transition:transform var(--dur) var(--ease-spring), background-color var(--dur-fast) ease}
+.day-mark:active{transform:scale(.88)}
+.day-mark.on{background:var(--accent-grad); border-color:transparent; box-shadow:var(--glow-soft)}
+.day-mark:disabled{cursor:default; opacity:.55}
+.day-logs{display:flex; flex-direction:column; gap:10px; margin-top:4px}
+.day-log{background:var(--grid); border-radius:var(--r-md); padding:12px 13px; overflow:hidden}
+.day-log img{width:100%; border-radius:var(--r-md); margin-bottom:9px; display:block; box-shadow:var(--elev)}
+.day-log .nm{font-size:14.5px; font-weight:700}
+.day-log .bd{font-size:13px; color:var(--ink-2); margin-top:3px; line-height:1.6}
+/* 피드(기록 작성 폼에서 계속 사용) */
 .fd-row{display:flex; gap:8px; align-items:center}
 .post .post-hd{display:flex; align-items:center; gap:9px; margin-bottom:4px}
 .avatar{width:34px; height:34px; flex:0 0 34px; border-radius:50%; background:var(--accent-soft); color:var(--accent);
@@ -422,7 +505,7 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
     <section id="view-today"></section>
     <section id="view-plan" class="hidden"></section>
     <section id="view-recipes" class="hidden"></section>
-    <section id="view-feed" class="hidden"></section>
+    <section id="view-cal" class="hidden"></section>
     <section id="view-stock" class="hidden"></section>
     <section id="view-order" class="hidden"></section>
     <section id="view-data" class="hidden"></section>
@@ -435,7 +518,7 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
   <button data-v="today" class="on" onclick="go('today')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10" stroke-linecap="round"/></svg></span>오늘</button>
   <button data-v="plan" onclick="go('plan')"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2"/><path d="M3.5 9h17M8 3v3M16 3v3" stroke-linecap="round"/></svg></span>식단표</button>
   <button data-v="recipes" onclick="go('recipes')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15.5H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20M9 7.5h6M9 11h4" stroke-linecap="round"/></svg></span>레시피</button>
-  <button data-v="feed" onclick="go('feed')"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="12" cy="12" r="3.6"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg></span>피드</button>
+  <button data-v="cal" onclick="go('cal')"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="4"/><path d="M3.5 9.5h17M8 3v3M16 3v3" stroke-linecap="round"/><circle cx="12" cy="15" r="3.2"/></svg></span>기록</button>
   <button data-v="stock" onclick="go('stock')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9" stroke-linejoin="round"/></svg></span>재고</button>
   <button data-v="order" onclick="go('order')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h2l2 11h9l2-8H7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19" r="1.3" fill="currentColor" stroke="none"/><circle cx="16.5" cy="19" r="1.3" fill="currentColor" stroke="none"/></svg></span>주문</button>
 </nav>
@@ -445,7 +528,7 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
    모든 기록은 이 기기(브라우저 localStorage)에만 저장되고, 서버로 전송되지 않습니다.
    기기를 옮길 때는 [설정 → 기록 저장·복원]의 내보내기/가져오기를 사용합니다.
    ============================================================ */
-/* 내보내기·가져오기에 담는 상태 키 목록(테마·피드는 별도 저장) */
+/* 내보내기·가져오기에 담는 상태 키 목록(테마·요리 사진 기록은 별도 저장) */
 const SYNC_KEYS = ["tier","schedule","times","custom","favs","shuffle","kcalCap","proTarget","inbound","skips","eaten","adj","myItems","shoplist","avoid","extraMeals","myRecipes","nick","menuMods","habits","cookStats","servings","myPresets"];
 /* 구 그룹 기능의 변경이력 훅 — 로컬 전용에선 기록할 곳이 없어 아무 것도 하지 않는다 */
 function logAction(){}
@@ -1852,7 +1935,19 @@ function deleteMyRecipe(id){
 const FEED_KEY="mealapp_feed_v1", DEV_KEY="mealapp_dev";
 let FEED_REMOTE=null, _draftPhoto=null;
 function devId(){ try{ let d=localStorage.getItem(DEV_KEY); if(!d){ d=uid("dev"); localStorage.setItem(DEV_KEY,d); } return d; }catch(e){ return "dev-local"; } }
-function loadFeed(){ try{ const raw=localStorage.getItem(FEED_KEY); if(raw) S.feedLocal=JSON.parse(raw)||[]; }catch(e){} }
+function loadFeed(){
+  try{ const raw=localStorage.getItem(FEED_KEY); if(raw) S.feedLocal=JSON.parse(raw)||[]; }catch(e){}
+  /* v24 이관: 예전 피드 게시물에는 날짜가 없다. 작성 시각(at)으로 날짜를 채워 캘린더 안으로 흡수한다. */
+  let moved=0;
+  for(const p of (S.feedLocal||[])){
+    if(!p.date){ const d=new Date(p.at||Date.now());
+      p.date = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+      moved++; }
+  }
+  if(moved) try{ saveFeed(); }catch(e){}
+}
+/* 그날의 요리 기록(사진·메모) */
+function logsOf(dS){ return (S.feedLocal||[]).filter(p=>p.date===dS).sort((a,b)=>b.at-a.at); }
 function saveFeed(){
   try{ localStorage.setItem(FEED_KEY, JSON.stringify(S.feedLocal||[])); }
   catch(e){ try{ (S.feedLocal||[]).slice(8).forEach(p=>p.photo=null); localStorage.setItem(FEED_KEY, JSON.stringify(S.feedLocal||[])); }catch(_){ alert("저장 공간이 가득 찼어요. 오래된 게시물을 지워 주세요."); } }
@@ -1876,16 +1971,16 @@ function pickPhoto(input){
   rd.readAsDataURL(f);
 }
 function publishPost(){
-  const name=($("fd-name").value||"").trim(), body=($("fd-body").value||"").trim();
-  const nick=($("fd-nick").value||"").trim()||"익명";
+  const name=(($("fd-name")||{}).value||"").trim(), body=(($("fd-body")||{}).value||"").trim();
   if(!name&&!body&&!_draftPhoto){ alert("요리 이름이나 사진을 넣어 주세요."); return; }
-  S.nick=nick;
-  const post={ id:uid("po"), at:Date.now(), by:devId(), nick, name, body, photo:_draftPhoto||null, likes:{}, comments:{} };
-  const fr=activeFeedRef();
-  if(fr) fr.child(post.id).set(post);
-  else { if(!Array.isArray(S.feedLocal)) S.feedLocal=[]; S.feedLocal.unshift(post); saveFeed(); }
-  logAction("피드에 '"+(name||"게시물")+"' 올림");
-  _draftPhoto=null; render();
+  const post={ id:uid("po"), at:Date.now(), date:todayStr(), by:devId(), nick:(S.nick||""), name, body,
+    photo:_draftPhoto||null, likes:{}, comments:{} };
+  if(!Array.isArray(S.feedLocal)) S.feedLocal=[];
+  S.feedLocal.unshift(post); saveFeed();
+  _draftPhoto=null;
+  const pv=$("fd-preview"); if(pv){ pv.style.display="none"; pv.src=""; }
+  toast("오늘 기록에 담았어요");
+  render(); if(CAL.open) openDay(CAL.open);
 }
 function toggleLike(pid){
   const me=devId(); const fr=activeFeedRef();
@@ -1910,42 +2005,274 @@ function deletePost(pid){
   if(fr){ fr.child(pid).set(null); return; }
   S.feedLocal=(S.feedLocal||[]).filter(x=>x.id!==pid); saveFeed(); render();
 }
-function renderFeed(){
-  const items=feedItems();
-  const banner = `<div class="alertbox info">📔 <div>만든 요리를 사진과 함께 남기는 <b>나만의 요리 기록장</b>이에요. 이 기기에만 저장되고 어디로도 전송되지 않아요.</div></div>`;
-  const composer=`<div class="card"><h2>📸 오늘 뭐 만들었어요?</h2>
+/* ============================================================ 기록 캘린더 — 애플 건강 앱 활동 링 문법
+   링 = 그날 먹은 끼니 / 그날 계획한 끼니(의도적으로 거른 끼니는 분모에서 뺀다).
+   그래서 "점심·저녁만 계획한 날 둘 다 먹음"도, "하루 한 끼 계획한 날 한 끼 먹음"도 100%가 된다.
+   지난 날짜는 잠긴다 — 소급 입력을 열어 두면 링은 기록이 아니라 그림이 되기 때문. ============ */
+const CAL = { ym:null, open:null };
+function ymOf(dS){ return dS.slice(0,7); }
+function ymShift(ym, k){ let [y,m]=ym.split("-").map(Number); m+=k; while(m<1){m+=12;y--;} while(m>12){m-=12;y++;} return y+"-"+String(m).padStart(2,"0"); }
+function daysInMonth(ym){ const [y,m]=ym.split("-").map(Number); return new Date(y,m,0).getDate(); }
+function firstDow(ym){ const [y,m]=ym.split("-").map(Number); return new Date(y,m-1,1).getDay(); }
+
+/* 그날의 링 상태 — planned(계획 끼니 수) / eaten(먹은 수) / pct / full */
+function dayRing(dS){
+  let planned=0, eaten=0;
+  for(const [slot] of slotsOf(dS)){
+    const key=dS+"|"+slot;
+    if(S.skips.includes(key)) continue;      // 처음부터 거르기로 한 끼니는 분모에서 제외
+    planned++;
+    if(S.eaten.includes(key)) eaten++;
+  }
+  return {planned, eaten, pct: planned?eaten/planned:0, full: planned>0 && eaten===planned};
+}
+/* 한 달 통계 — 꽉 채운 날, 계획이 있던 날, 평균 실천율 */
+function monthStats(ym){
+  const n=daysInMonth(ym), t=todayStr(); let full=0, withPlan=0, sumPct=0, done=0;
+  for(let d=1; d<=n; d++){
+    const dS=ym+"-"+String(d).padStart(2,"0");
+    if(dS>t) continue;                        // 아직 오지 않은 날은 세지 않는다
+    const r=dayRing(dS); if(!r.planned) continue;
+    withPlan++; sumPct+=r.pct; if(r.full) full++; done++;
+  }
+  return {full, withPlan, avg: done?Math.round(sumPct/done*100):0};
+}
+/* 링 SVG. pct 0~1, size는 뷰박스 기준. 애플처럼 12시 방향에서 시계 방향으로 채운다. */
+function ringSVG(pct, opt){
+  const o=opt||{}, s=o.size||44, sw=o.sw||6, r=(s-sw)/2, c=2*Math.PI*r, dash=c*Math.max(0, Math.min(1, pct));
+  const track=o.track||"var(--grid)", col=o.color||"url(#ringgrad)";
+  return `<svg viewBox="0 0 ${s} ${s}" aria-hidden="true">
+    <circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="${track}" stroke-width="${sw}"/>
+    ${dash>0?`<circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}"
+      stroke-linecap="round" stroke-dasharray="${dash.toFixed(2)} ${(c-dash).toFixed(2)}"
+      transform="rotate(-90 ${s/2} ${s/2})"/>`:``}
+  </svg>`;
+}
+function calPrev(){ CAL.ym=ymShift(CAL.ym||ymOf(todayStr()),-1); renderCal(); }
+function calNext(){ const t=ymOf(todayStr()); const nx=ymShift(CAL.ym||t,1); if(nx>t) return; CAL.ym=nx; renderCal(); }
+
+function ensureRingDefs(){
+  if(document.getElementById("ringdefs")) return;
+  const sv=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  sv.setAttribute("id","ringdefs"); sv.setAttribute("width","0"); sv.setAttribute("height","0");
+  sv.setAttribute("aria-hidden","true"); sv.style.position="absolute";
+  sv.innerHTML='<defs><linearGradient id="ringgrad" x1="0" y1="0" x2="1" y2="1">'
+    +'<stop class="g0" offset="0%"/><stop class="g1" offset="100%"/></linearGradient></defs>';
+  document.body.appendChild(sv);
+}
+function renderCal(){
+  ensureRingDefs();
+  const t=todayStr(), curYm=ymOf(t);
+  if(!CAL.ym) CAL.ym=curYm;
+  const ym=CAL.ym, [yy,mm]=ym.split("-").map(Number);
+  const n=daysInMonth(ym), lead=firstDow(ym), st=monthStats(ym);
+
+  let cells="";
+  for(let i=0;i<lead;i++) cells+=`<span class="cal-cell blank">${ringSVG(0)}</span>`;
+  for(let d=1; d<=n; d++){
+    const dS=ym+"-"+String(d).padStart(2,"0");
+    const fut=dS>t, isToday=dS===t, r=dayRing(dS);
+    const cls=["cal-cell"];
+    if(fut) cls.push("fut"); if(isToday) cls.push("today"); if(r.full) cls.push("full");
+    if(!r.planned && !fut) cls.push("none");
+    const track = isToday ? "var(--accent-soft)" : "var(--grid)";
+    const svg = ringSVG(fut?0:r.pct, {track, sw:5});
+    const label = fut ? `${d}일 · 아직 오지 않은 날`
+      : (!r.planned ? `${d}일 · 계획 없음` : `${d}일 · ${r.planned}끼 중 ${r.eaten}끼`);
+    cells+=`<button class="${cls.join(" ")}" onclick="openDay('${dS}')" aria-label="${label}">${svg}<span class="dn">${d}</span></button>`;
+  }
+
+  const streak=streakDays();
+  const head=`<div class="card calcard">
+    <div class="cal-eyebrow">MEAL RECORD</div>
+    <div class="cal-head">
+      <button class="cal-nav" onclick="calPrev()" aria-label="이전 달">‹</button>
+      <div class="ym">${yy}년 ${mm}월</div>
+      <button class="cal-nav" onclick="calNext()" ${ym>=curYm?"disabled":""} aria-label="다음 달">›</button>
+    </div>
+    <div class="cal-stats">
+      <div class="cal-stat"><div class="k">꽉 채운 날</div><div class="v">${st.full}<span>일</span></div></div>
+      <div class="cal-stat"><div class="k">연속</div><div class="v">${streak}<span>일</span></div></div>
+      <div class="cal-stat"><div class="k">평균 실천</div><div class="v">${st.avg}<span>%</span></div></div>
+    </div>
+    <div class="cal-dowk">${DOWK.map(w=>`<span>${w}</span>`).join("")}</div>
+    <div class="cal-grid">${cells}</div>
+    <div class="cal-legend">
+      <span><i style="background:#0a84ff"></i>계획한 끼니를 다 먹으면 꽉 참</span>
+      <span>🔒 지난 날짜는 고칠 수 없어요</span>
+    </div>
+    <div class="btnrow">
+      <button class="btn primary" style="flex:1" onclick="shareMonthImage()">📤 스토리로 공유</button>
+    </div>
+  </div>`;
+
+  const todayR=dayRing(t);
+  const todayCard=`<div class="card">
+    <h2>📸 오늘 뭐 만들었어요?<span class="sub">${todayR.planned?`${todayR.planned}끼 중 ${todayR.eaten}끼`:"계획 없는 날"}</span></h2>
     <div class="fd-row">
       <label class="btn" style="flex:0 0 auto">📷 사진<input type="file" accept="image/*" style="display:none" onchange="pickPhoto(this)"></label>
       <input id="fd-name" type="text" placeholder="요리 이름 (예: 두부김치)" style="flex:1">
     </div>
     <img id="fd-preview" style="display:${_draftPhoto?"block":"none"};width:100%;border-radius:14px;margin-top:9px" src="${_draftPhoto||""}">
-    <textarea id="fd-body" style="margin-top:9px" placeholder="레시피·조리 순서·후기를 자유롭게 적어 주세요"></textarea>
-    <div class="fd-row" style="margin-top:9px">
-      <input id="fd-nick" type="text" value="${escH(S.nick||"")}" placeholder="닉네임" style="flex:0 0 110px">
-      <button class="btn primary" style="flex:1" onclick="publishPost()">게시하기</button>
-    </div></div>`;
-  const posts=items.map(p=>{
-    const likeN=p.likes?Object.keys(p.likes).length:0;
-    const liked=p.likes&&p.likes[devId()];
-    const cs=p.comments?Object.values(p.comments).sort((a,b)=>a.at-b.at):[];
-    const cHtml=cs.map(c=>`<div class="cmt"><b>${escH(c.nick||"익명")}</b> ${escH(c.text)}</div>`).join("");
-    return `<div class="card post">
-      <div class="post-hd"><span class="avatar">${escH((p.nick||"익")[0])}</span>
-        <span class="post-by"><b>${escH(p.nick||"익명")}</b><span class="tiny">${timeAgo(p.at)}</span></span>
-        ${p.by===devId()?`<button class="btn sm" onclick="deletePost('${p.id}')">삭제</button>`:""}</div>
-      ${p.photo?`<img class="post-img" src="${p.photo}" loading="lazy">`:""}
-      ${p.name?`<div class="post-nm">${escH(p.name)}</div>`:""}
-      ${p.body?`<div class="post-body">${escH(p.body).replace(/\n/g,"<br>")}</div>`:""}
-      <div class="post-acts">
-        <button class="heart ${liked?"on":""}" onclick="toggleLike('${p.id}')">${liked?"❤️":"🤍"} ${likeN||""}</button>
-        <span class="tiny">댓글 ${cs.length}</span></div>
-      ${cHtml?`<div class="cmts">${cHtml}</div>`:""}
-      <div class="fd-row" style="margin-top:8px">
-        <input id="cmt-${p.id}" type="text" placeholder="댓글 달기..." style="flex:1" onkeydown="if(event.key==='Enter')addComment('${p.id}')">
-        <button class="btn sm" onclick="addComment('${p.id}')">등록</button>
-      </div></div>`;
-  }).join("");
-  $("view-feed").innerHTML=banner+composer+(posts||`<div class="card tiny" style="text-align:center;padding:26px 18px">아직 게시물이 없어요.<br>오늘 만든 요리를 첫 게시물로 올려 보세요! 🍳</div>`);
+    <textarea id="fd-body" style="margin-top:9px" placeholder="오늘의 한 줄 · 조리 후기를 남겨 보세요"></textarea>
+    <div class="btnrow"><button class="btn primary" style="flex:1" onclick="publishPost()">오늘 기록에 담기</button></div>
+    <div class="tiny" style="margin-top:8px">사진과 메모는 이 기기에만 저장되고 어디로도 전송되지 않아요. 달력에서 그날을 누르면 다시 볼 수 있어요.</div>
+  </div>`;
+
+  $("view-cal").innerHTML=head+todayCard;
+}
+
+/* 날짜 상세 — 링을 누르면 열린다. 그날 끼니 + 그날 남긴 요리 기록. */
+function openDay(dS){
+  const t=todayStr();
+  if(dS>t){ toast("아직 오지 않은 날이에요"); return; }
+  CAL.open=dS;
+  const r=dayRing(dS), locked=dS!==t;
+  const slots=slotsOf(dS).map(([slot,mid])=>{
+    const key=dS+"|"+slot, skip=S.skips.includes(key), eaten=S.eaten.includes(key);
+    const cls=["day-slot"]; if(eaten) cls.push("done"); if(skip) cls.push("skip");
+    return `<div class="${cls.join(" ")}">
+      <span class="sl">${SLOT_SHORT[slot]}</span>
+      <span class="nm">${escH((MEALS[mid]||{}).name||"—")}</span>
+      ${skip?`<span class="badge plain">거름</span>`
+            :`<button class="day-mark ${eaten?"on":""}" ${locked?"disabled":""} onclick="markEaten('${key}'); openDay('${dS}')"
+                aria-label="${SLOT_SHORT[slot]} 먹음 체크">${eaten?"✓":""}</button>`}
+    </div>`;
+  }).join("") || `<div class="tiny" style="padding:10px 0">이 날은 계획된 끼니가 없어요.</div>`;
+
+  const logs=logsOf(dS).map(p=>`<div class="day-log">
+      ${p.photo?`<img src="${p.photo}" loading="lazy">`:""}
+      ${p.name?`<div class="nm">${escH(p.name)}</div>`:""}
+      ${p.body?`<div class="bd">${escH(p.body).replace(/\n/g,"<br>")}</div>`:""}
+      <div class="btnrow" style="margin-top:8px"><button class="btn sm" onclick="deleteDayLog('${p.id}')">삭제</button></div>
+    </div>`).join("");
+
+  const [Y,M,D]=dS.split("-").map(Number);
+  $("rsheet-root").style.display="block";
+  $("rsheet-root").innerHTML=`<div class="sheet-back" onclick="closeDay()"></div>
+    <div class="sheet"><div class="sheet-grip"></div>
+    <div class="sheet-h"><span>${M}월 ${D}일 (${DOWK[dow(dS)]})</span>
+      <button class="sheet-x" onclick="closeDay()">✕</button></div>
+    <div class="day-hero">
+      ${ringSVG(r.pct,{size:76, sw:10})}
+      <div>
+        <div class="t">${r.planned?(r.full?"계획한 끼니를 다 먹은 날":`${r.planned}끼 중 ${r.eaten}끼`):"계획이 없던 날"}</div>
+        <div class="s">${r.planned?`실천 ${Math.round(r.pct*100)}%`:"쉬어 가는 날이에요"}</div>
+        ${locked?`<div class="day-lock">🔒 지난 날짜는 고칠 수 없어요</div>`:``}
+      </div>
+    </div>
+    ${slots}
+    ${logs?`<hr class="h"><div class="tiny" style="margin-bottom:8px">이 날의 요리 기록</div><div class="day-logs">${logs}</div>`:``}
+    ${!locked&&!logs?`<hr class="h"><div class="tiny">아래 [오늘 뭐 만들었어요?]에서 사진과 메모를 남기면 이 날짜에 함께 담깁니다.</div>`:``}
+    </div>`;
+}
+function closeDay(){ CAL.open=null; const r=$("rsheet-root"); r.style.display="none"; r.innerHTML=""; }
+function deleteDayLog(pid){
+  if(!confirm("이 기록을 삭제할까요?")) return;
+  S.feedLocal=(S.feedLocal||[]).filter(x=>x.id!==pid); saveFeed();
+  const d=CAL.open; render(); if(d) openDay(d);
+}
+
+/* 📤 인스타 스토리 규격(1080×1920) 공유 이미지 — 월 격자 + 채운 날·연속·평균 */
+/* 📤 인스타 스토리 카드(1080×1920) — 앱과 같은 얼굴로 나간다(테마를 따름).
+   구성은 앱의 [기록] 탭과 동일: 마이크로 라벨 · 히어로 숫자 · 활동 링 격자. */
+function shareMonthImage(){
+  const ym=CAL.ym||ymOf(todayStr()), [yy,mm]=ym.split("-").map(Number);
+  const t=todayStr(), n=daysInMonth(ym), lead=firstDow(ym), st=monthStats(ym), streak=streakDays();
+  const W=1080, H=1920, C=document.createElement("canvas"); C.width=W; C.height=H;
+  const x=C.getContext("2d");
+  const dark=document.documentElement.getAttribute("data-theme")==="dark"
+    || (matchMedia("(prefers-color-scheme: dark)").matches && document.documentElement.getAttribute("data-theme")!=="light");
+  const ACC=dark?"#0a84ff":"#0071e3", ACC2=dark?"#64d2ff":"#4db8ff";
+  const INK=dark?"#ffffff":"#1d1d1f", MUTE=dark?"#8b95a3":"#86868b", DIM=dark?"#49525f":"#c9ced6";
+  const TRACK=dark?"rgba(255,255,255,.085)":"#e7eaf0";
+  const ls=(v)=>{ try{ x.letterSpacing=v; }catch(e){} };   /* 크로미움·사파리 지원, 미지원이면 무시 */
+
+  /* 바탕 — 앱의 페이지 색을 그대로 쓰고, 액센트 후광 두 점으로 깊이만 준다 */
+  const g=x.createLinearGradient(0,0,W*0.5,H);
+  if(dark){ g.addColorStop(0,"#1b1f26"); g.addColorStop(.55,"#0d0f13"); g.addColorStop(1,"#050608"); }
+  else { g.addColorStop(0,"#ffffff"); g.addColorStop(.55,"#f5f6f9"); g.addColorStop(1,"#eef1f6"); }
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  const glow=x.createRadialGradient(W*0.88,H*0.10,0,W*0.88,H*0.10,W*0.8);
+  glow.addColorStop(0,dark?"rgba(10,132,255,.36)":"rgba(0,113,227,.12)"); glow.addColorStop(1,"rgba(0,113,227,0)");
+  x.fillStyle=glow; x.fillRect(0,0,W,H);
+  const glow2=x.createRadialGradient(W*0.06,H*0.94,0,W*0.06,H*0.94,W*0.75);
+  glow2.addColorStop(0,dark?"rgba(100,210,255,.16)":"rgba(77,184,255,.10)"); glow2.addColorStop(1,"rgba(77,184,255,0)");
+  x.fillStyle=glow2; x.fillRect(0,0,W,H);
+
+  x.textAlign="center"; x.textBaseline="alphabetic";
+
+  /* 상단 — 연·월 */
+  ls("12px");
+  x.fillStyle=MUTE; x.font="800 34px sans-serif";
+  x.fillText(`${yy}.${String(mm).padStart(2,"0")}`, W/2+6, 300);
+  ls("0px");
+
+  /* 히어로 — 이번 달 꽉 채운 날 */
+  x.fillStyle=INK; x.font="900 232px sans-serif";
+  x.fillText(String(st.full), W/2, 508);
+  ls("10px");
+  x.fillStyle=ACC; x.font="800 34px sans-serif";
+  x.fillText("꽉 채운 날", W/2+5, 574);
+  ls("0px");
+
+  /* 링 격자 — 카드 프레임 없이 바탕 위에 바로 */
+  const pad=112, gw=W-pad*2, cell=gw/7, rowH=cell*0.95;
+  const R=cell*0.325, SW=cell*0.115, gy=694;
+  ls("4px");
+  x.fillStyle=DIM; x.font="800 24px sans-serif";
+  for(let i=0;i<7;i++) x.fillText(DOWK[i], pad+cell*i+cell/2, gy-34);
+  ls("0px");
+  for(let d=1; d<=n; d++){
+    const idx=lead+d-1, col=idx%7, row=Math.floor(idx/7);
+    const ccx=pad+cell*col+cell/2, ccy=gy+row*rowH+R;
+    const dS=ym+"-"+String(d).padStart(2,"0"), fut=dS>t, r=dayRing(dS);
+    /* 트랙 */
+    x.beginPath(); x.arc(ccx,ccy,R,0,Math.PI*2);
+    x.strokeStyle=TRACK; x.lineWidth=SW; x.lineCap="butt"; x.shadowBlur=0; x.stroke();
+    /* 채움 — 좌상단→우하단 그라디언트, 꽉 찬 날은 글로우 */
+    if(!fut && r.pct>0){
+      const rg=x.createLinearGradient(ccx-R,ccy-R,ccx+R,ccy+R);
+      rg.addColorStop(0,ACC); rg.addColorStop(1,ACC2);
+      if(r.full && dark){ x.shadowColor="rgba(10,132,255,.65)"; x.shadowBlur=22; }
+      x.beginPath(); x.arc(ccx,ccy,R,-Math.PI/2,-Math.PI/2+Math.PI*2*r.pct);
+      x.strokeStyle=rg; x.lineWidth=SW; x.lineCap="round"; x.stroke();
+      x.shadowBlur=0;
+    }
+    x.fillStyle=fut?DIM:(r.full?INK:MUTE);
+    x.font=(!fut&&r.full)?"900 25px sans-serif":"700 25px sans-serif";
+    x.fillText(String(d), ccx, ccy+9);
+  }
+  const gBottom=gy+Math.ceil((lead+n)/7)*rowH;
+
+  /* 하단 — 연속 · 평균 실천 */
+  const sy=Math.min(gBottom+140, H-430);
+  [[String(streak),"연속","일"],[String(st.avg),"평균 실천","%"]].forEach((s,i)=>{
+    const sx=W/2+(i?1:-1)*196;
+    x.fillStyle=INK; x.font="900 74px sans-serif";
+    const num=s[0], unit=s[2];
+    const wn=x.measureText(num).width;
+    x.font="800 30px sans-serif"; const wu=x.measureText(unit).width;
+    x.textAlign="left";
+    const startX=sx-(wn+wu)/2;
+    x.font="900 74px sans-serif"; x.fillStyle=INK; x.fillText(num, startX, sy);
+    x.fillStyle=MUTE; x.font="800 30px sans-serif"; x.fillText(unit, startX+wn+4, sy);
+    x.textAlign="center";
+    ls("6px"); x.fillStyle=MUTE; x.font="700 26px sans-serif"; x.fillText(s[1], sx+3, sy+50); ls("0px");
+  });
+
+  /* 워드마크 */
+  x.beginPath(); x.moveTo(W/2-34,H-330); x.lineTo(W/2+34,H-330);
+  x.strokeStyle=dark?"rgba(255,255,255,.16)":"rgba(0,0,0,.12)"; x.lineWidth=3; x.lineCap="round"; x.stroke();
+  ls("8px");
+  x.fillStyle=MUTE; x.font="800 28px sans-serif"; x.fillText("식단 매니저", W/2+4, H-272);
+  ls("0px");
+
+  C.toBlob(blob=>{
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+    a.download="식단기록_"+ym+".png"; a.click(); URL.revokeObjectURL(a.href);
+    toast("이미지를 저장했어요 · 스토리에 올려 보세요");
+  });
 }
 /* ============================================================ 렌더 ============================================================ */
 function render(){
@@ -1963,7 +2290,7 @@ function render(){
   $("t-dinner-n").textContent = main?(MEALS[main].kcal+" kcal · 단백질 "+MEALS[main].pro+"g"):"스케줄에서 요일을 켜세요";
   $("t-order").textContent=orderNeeded().length+"개";
   $("t-expiry").textContent=(expiringSoon().length+myExpiring().length)+"개";
-  renderAlerts(); renderToday(); renderPlan(); renderStock(); renderOrder(); renderData(); renderRecipes(); renderFeed();
+  renderAlerts(); renderToday(); renderPlan(); renderStock(); renderOrder(); renderData(); renderRecipes(); renderCal();
   renderPicker();
   scheduleSaveLocal();
 }
@@ -2339,6 +2666,8 @@ function renderData(){
 }
 /* ============================================================ 동작 ============================================================ */
 function markEaten(k){
+  /* 그날이 지나면 잠금 — 소급 체크를 막아야 캘린더 링이 '실제로 지킨 기록'이 된다 */
+  if(String(k).split("|")[0] !== todayStr()){ toast("지난 날짜는 고칠 수 없어요"); return; }
   const i=S.eaten.indexOf(k);
   const parts=k.split("|"); const mid=(planFor(dow(parts[0]))||{})[parts[1]];   // 조리 통계용
   if(!S.cookStats) S.cookStats={};
@@ -2479,7 +2808,7 @@ function renderPicker(){
 }
 function go(v){
   document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
-  for(const k of ["today","plan","recipes","feed","stock","order","data"]) $("view-"+k).classList.toggle("hidden",k!==v);
+  for(const k of ["today","plan","recipes","cal","stock","order","data"]) $("view-"+k).classList.toggle("hidden",k!==v);
   window.scrollTo({top:0});
 }
 function setTier(t){ S.tier=t; render(); }
@@ -2517,7 +2846,7 @@ function applyTheme(){
   tb.title = S.theme==="auto"?"자동":S.theme==="light"?"라이트":"다크";
 }
 /* ============================================================ PWA — 설치·오프라인·업데이트 (웹주소로 열릴 때만 활성화, file://은 기존 그대로) ============================================================ */
-const APP_VER="23.1";
+const APP_VER="24.3";
 const IS_NATIVE=location.protocol==="capacitor:"||!!window.Capacitor;   // 앱스토어(iOS) 네이티브 셸
 const IS_HTTP=(location.protocol==="http:"||location.protocol==="https:")&&!IS_NATIVE;
 let _installEvt=null, _swWaiting=null;
@@ -2593,7 +2922,7 @@ const OB_SLIDES=[
   { art:"🛒", step:"STEP 2", t:"장 볼 목록이<br>저절로 만들어져요",
     d:"<b>[주문]</b> 탭에 이번에 필요한 재료와 수량이 정리돼 있어요. 재료마다 <b>쿠팡·컬리 검색 버튼</b>이 붙어 있어 가격 비교 없이 담기만 하면 됩니다. 물건이 도착하면 <b>[입고]</b>를 눌러 주세요." },
   { art:"🍽️", step:"STEP 3", t:"오늘 먹을 것만<br>보면 돼요",
-    d:"<b>[오늘]</b> 탭에 오늘의 끼니와 레시피가 재료·순서·팁까지 그대로 나와요. 다 먹었으면 <b>[먹었어요]</b>를 한 번 눌러 주세요. 그게 전부입니다." },
+    d:"<b>[오늘]</b> 탭에 오늘의 끼니와 레시피가 재료·순서·팁까지 그대로 나와요. 다 먹었으면 <b>[먹었어요]</b>를 한 번 눌러 주세요. 그 체크가 <b>[기록]</b> 탭 달력의 링을 채웁니다 — 그날 계획한 끼니를 다 먹으면 링이 꽉 차요. <b>지난 날짜는 고칠 수 없으니</b> 그날 안에 눌러 주세요." },
   { art:"🔄", step:"STEP 4", t:"먹으면 재고가<br>저절로 줄어요",
     d:"체크할 때마다 쓴 재료만큼 재고가 빠지고, 떨어질 때쯤 미리 알려 드려요. <b>유통기한이 3일 남은 재료</b>는 그걸 먼저 쓰는 요리를 추천해 버리는 일이 없게 합니다." },
   { art:"🧺", step:"", t:"직접 산 재료도,<br>우리집 레시피도",
