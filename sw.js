@@ -1,6 +1,6 @@
 /* 식단 매니저 서비스워커 — 오프라인 캐시 + 업데이트
    새 버전 배포 시 VER만 올리면 됩니다(파일 교체 후). */
-const VER = "25.4.0";
+const VER = "27.0.0";
 const CACHE = "mealapp-" + VER;
 const ASSETS = [
   "./",
