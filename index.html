@@ -96,7 +96,7 @@ header.app::after{content:""; position:absolute; top:100%; left:0; right:0; heig
   -webkit-backdrop-filter:blur(9px); backdrop-filter:blur(9px);
   -webkit-mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.55) 45%, transparent 100%);
   mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.55) 45%, transparent 100%)}
-.ab-side{width:40px; display:flex; align-items:center; justify-content:flex-end}
+.ab-side{width:44px; display:flex; align-items:center; justify-content:flex-end}
 .ab-side.l{justify-content:flex-start}
 .ab-title{flex:1; text-align:center; min-width:0}
 header.app h1{font-size:17px; margin:0; font-weight:800; letter-spacing:-.3px}
@@ -271,6 +271,16 @@ a.shop{font-size:11.5px; font-weight:700; text-decoration:none; border:0; border
   transition:transform 120ms var(--ease-out-strong), filter 120ms ease}
 a.shop:active{transform:scale(.95)}
 .total-line{display:flex; justify-content:space-between; font-weight:800; padding-top:10px; font-size:14.5px}
+/* ── 글씨는 어떤 칸에서도 밖으로 새지 않는다 ──────────────────────
+   띄어쓰기가 없는 긴 이름("참치김치볶음밥", "아주긴이름의재료")은 통째로 한 낱말이라
+   기본 규칙으로는 어디서도 끊지 못하고 그대로 넘친다.
+   anywhere 는 (1) 끊을 곳이 없으면 글자 사이에서 끊고
+              (2) 칸 폭을 계산할 때도 끊을 수 있다고 쳐서
+                  flex/grid 칸이 긴 낱말 때문에 억지로 넓어지는 것까지 막는다.
+   숫자·금액처럼 끊이면 안 되는 것에는 따로 white-space:nowrap 을 걸어 두었다. */
+main, header, #alerts, .sheet, .toast{overflow-wrap:anywhere}
+/* 제목·설명문은 낱말 가운데를 끊지 않는다. 낱말 하나가 통째로 안 들어갈 때만 끊는다. */
+.card h2, .buy-h, .fold-h h2, .alertbox, .muted, .tiny, h1{overflow-wrap:break-word}
 /* [주문] 살 것 묶음 — 한 카드 안에서 '몰아서'와 '신선'을 눈으로 가른다 */
 .buy-sec{border:1px solid var(--ring); border-radius:16px; padding:12px 13px 13px; margin-top:10px; background:var(--page)}
 .buy-sec + .buy-sec{margin-top:12px}
@@ -288,8 +298,7 @@ a.shop:active{transform:scale(.95)}
   background:none; border:0; padding:0; margin:0; font:inherit; color:var(--ink); text-align:left;
   cursor:pointer; -webkit-appearance:none; appearance:none}
 .fold-h h2{margin:0; flex:1; min-width:0}
-.fold-h .fx{flex:none; color:var(--ink-3); font-size:12px; font-weight:800; transition:transform .18s ease}
-.fold-h[aria-expanded="true"] .fx{transform:rotate(90deg)}
+.fold-h .fx{flex:none; color:var(--ink-3); font-size:12px; font-weight:800}
 .fold-b{padding-top:4px}
 .alertbox{border-radius:16px; padding:12px 14px; margin-bottom:9px; font-size:13px; display:flex; gap:9px; align-items:flex-start}
 .alertbox.warn{background:var(--warn-bg)} .alertbox.serious{background:var(--serious-bg)}
@@ -428,11 +437,13 @@ table.sched th{padding:0}
 td.sday{font-size:12.5px; font-weight:700; color:var(--ink-2); white-space:nowrap; text-align:center; width:34px}
 td.sday .sn{font-size:9.5px; color:var(--ink-3); font-weight:500; font-variant-numeric:tabular-nums}
 .scell{width:100%; min-height:46px; border:0; background:var(--grid); border-radius:var(--r-sm);
-  cursor:pointer; padding:4px 5px; color:var(--ink-3); display:flex; align-items:center; justify-content:center;
+  cursor:pointer; padding:4px 3px; color:var(--ink-3); display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
   transition:transform var(--dur) var(--ease-spring), background-color var(--dur-fast) ease}
 .scell:active{transform:scale(.93)}
 .scell.on{background:var(--accent-soft); color:var(--accent-text)}
-.sc-name{font-size:10.5px; font-weight:700; line-height:1.15; text-align:center; word-break:keep-all}
+.sc-name{font-size:10.5px; font-weight:700; line-height:1.15; text-align:center;
+  word-break:keep-all; max-width:100%}
 .sc-plus{font-size:17px; font-weight:400; color:var(--ink-3)}
 table.plan.wk td{vertical-align:top}
 table.plan.wk td.wd{white-space:nowrap; width:44px}
@@ -1546,6 +1557,29 @@ function avoidCardHtml(){
     ${av.length?`<div class="tiny" style="margin-top:7px;color:var(--serious)">제외가 많으면 고를 메뉴가 줄어요. 한 끼니의 후보가 전부 제외되면 기본 메뉴가 그대로 나올 수 있어요.</div>`:""}
   </div>`;
 }
+/* 매번 만지는 설정은 제 이름을 가진 카드로 앞에 둔다.
+   지금까지는 '기록 저장·복원' 카드 안에, 백업 설명 아래에 묻혀 있었다. */
+function settingsCardHtml(){
+  return `<div class="card"><h2>⚙️ 내 설정 <span class="sub">주 ${mealsPerWeek()}끼 · ${S.tier}만 등급</span></h2>
+    <div class="muted" style="font-size:13px">식재료 예상 <b>${fmt(monthlyEstimate())}</b> · 이번 달 예산 ${fmt(tierBudget())} · 외식·간식 여유 ${fmt(Math.max(0,discretionaryRoom()))}</div>
+    <hr class="h">
+    <label class="f">하루 목표 열량 (kcal)</label>
+    <input type="number" value="${S.kcalCap}" step="100" min="1000" max="4000" onchange="S.kcalCap=Math.max(1000,Math.min(4000,+this.value||2700));render()">
+    <label class="f">하루 목표 단백질 (g)</label>
+    <input type="number" value="${S.proTarget}" step="10" min="40" max="250" onchange="S.proTarget=Math.max(40,Math.min(250,+this.value||100));render()">
+    <div class="tiny" style="margin-top:5px">메뉴를 고를 때 이 열량을 넘는 메뉴는 회색으로 잠겨요. 기본 2,700kcal은 체중 유지 기준에 여유를 더한 값입니다.</div>
+    <label class="f">몇 인분으로 요리하나요?</label>
+    <div class="chips">${[1,2,3,4].map(n=>`<button class="chip ${svN()===n?"on":""}" onclick="S.servings=${n};render()">${n}인분</button>`).join("")}</div>
+    <div class="tiny" style="margin-top:4px">재료 양·비용·재고 차감·장보기가 ×${svN()}로 계산돼요. 영양 표시는 1인분 기준 그대로예요.</div>
+  </div>`;
+}
+function avoidBodyHtml(){
+  const av=S.avoid||[];
+  return `
+    <div class="tiny" style="margin-bottom:8px">선택한 재료가 들어간 메뉴는 자동 식단에서 빠지고, 메뉴 고르기에서 회색으로 잠겨요.</div>
+    <div class="chips" style="flex-wrap:wrap">${AVOID_CHOICES.map(id=>`<button class="chip ${av.includes(id)?"on":""}" onclick="toggleAvoid('${id}')">${ITEMS[id].name.replace(/\(.*?\)/g,"").trim()}</button>`).join("")}</div>
+    ${av.length?`<div class="tiny" style="margin-top:7px;color:var(--serious)">제외가 많으면 고를 메뉴가 줄어요. 한 끼니의 후보가 전부 제외되면 기본 메뉴가 그대로 나올 수 있어요.</div>`:""}`;
+}
 /* ============================================================ 유통기한 임박 재료 소진 추천 ============================================================ */
 function urgentKeys(){
   const ks=new Set(), un=[];
@@ -2041,6 +2075,19 @@ function allRecipeEntries(){
 }
 function findEntry(src,id){ return allRecipeEntries().find(e=>e.src===src&&String(e.id)===String(id)); }
 const LV_TXT={1:"쉬움",2:"보통",3:"정성"};
+/* 좁은 칸에서 이름이 두 줄로 갈라질 때, 아무 글자 사이가 아니라
+   요리 이름의 '끝말' 앞에서 갈라지게 한다. 긴 끝말부터 본다. */
+const NAME_TAILS = ["카레라이스","스테이크","찌개+밥","볶음+밥","구이+밥","볶음밥","비빔밥","샐러드","파스타",
+  "토스트","셰이크","스무디","김치찜","라이스","덮밥","국밥","김밥","찌개","정식","구이","볶음","무침","조림",
+  "튀김","전골","한상"];
+function wrapName(name){
+  const h=escH(name);
+  for(const t of NAME_TAILS){
+    const i=h.lastIndexOf(t);
+    if(i>=2 && i+t.length===h.length) return h.slice(0,i)+"<wbr>"+t;
+  }
+  return h;
+}
 function renderRecipes(){
   const sets=haveKeywordSets();
   let list=allRecipeEntries().map(e=>({...e, match:recipeMatchCount(e.ing, sets)}));
@@ -2634,25 +2681,21 @@ function render(){
   restoreInputs(_keep);
   scheduleSaveLocal();
 }
+/* 맨 위 알림은 '지금 손을 써야 하는 것'만 말한다.
+   ① 아직 아무것도 안 산 사람 → 어디서 시작하는지 (설명 대신 버튼)
+   ② 오늘내일 상하는 재료 → 앱 재료와 내 재료를 한 줄에 모아서
+   여기 없던 '다 떨어졌어요' 줄은 지웠다. 바로 위 타일이 [지금 살 것 N가지]라고
+   이미 말하고, 목록은 [주문] 탭이 갖고 있다. 같은 말을 세 번 할 이유가 없다. */
 function renderAlerts(){
-  const t=todayStr(); let h="";
-  if(S.inbound.length===0)
-    h+=`<div class="alertbox info">🚀 <div><b>시작하기</b> — 아직 입고 기록이 없어요. <b>[주문]</b> 탭의 첫 장보기 목록을 주문하고, 도착하면 <b>입고 처리</b>를 눌러 주세요. 그때부터 재고·예산이 자동 계산됩니다.</div></div>`;
-  for(const id of expiringSoon()){
-    const e=expiryInfo(id);
-    h+=`<div class="alertbox warn">▲ <div><b>${ITEMS[id].name}</b> 유통기한 D-${e.dd} (${e.exp}) — 이번 끼니에 먼저 쓰세요.</div></div>`;
-  }
-  for(const m of myExpiring()){
-    h+=`<div class="alertbox warn">▲ <div><b>${escH(m.name)}</b> (내 재료) 유통기한 D-${myExpDD(m)} — [오늘] 탭 '먼저 써야 할 재료'를 확인하세요.</div></div>`;
-  }
-  /* 지금 아예 없는 것만 알린다. 전부 나열하면 첫 달엔 열몇 줄이 되어 아무도 안 읽는다.
-     일요일마다 뜨던 '격주 신선 주문일' 안내는 없앴다 — 이제 아무 날이나 열어도
-     [지금 살 것]이 그날 필요한 신선식품을 그대로 말해 준다. */
-  const bp=buyPlan(), gone=[...bp.bulk, ...bp.fresh].filter(x=>x.have<=0);
-  if(gone.length){
-    const names=gone.slice(0,3).map(x=>ITEMS[x.id].name).join(", ")+(gone.length>3?` 외 ${gone.length-3}가지`:"");
-    h+=`<div class="alertbox serious">🛒 <div><b>다 떨어졌어요:</b> ${names} — [주문] 탭 맨 위 <b>[지금 살 것]</b>에 담아 뒀어요.</div></div>`;
-  }
+  let h="";
+  if(!S.inbound.length)
+    h+=`<div class="alertbox info">🚀 <div>첫 장보기부터 시작해요.
+      <button class="btn sm" style="margin-left:6px" onclick="go('order')">살 것 보러 가기</button></div></div>`;
+  const soon=[];
+  for(const id of expiringSoon()) soon.push(ITEMS[id].name+" D-"+expiryInfo(id).dd);
+  for(const m of myExpiring()) soon.push(m.name+" D-"+myExpDD(m));
+  if(soon.length)
+    h+=`<div class="alertbox warn">▲ <div><b>곧 상해요</b> — ${escH(soon.join(", "))}. 오늘 끼니에 먼저 쓰세요.</div></div>`;
   $("alerts").innerHTML=h;
 }
 function mealCard(slot, mid, dateS){
@@ -2699,8 +2742,13 @@ function renderToday(){
       <div class="tiny" style="margin-top:8px;color:${band.c}">${band.t}</div>
     </div>`;
   }
-  /* 계획 외 섭취 기록 */
-  h+=`<div class="card"><h2>🍪 추가로 먹은 것 <span class="sub">계획 외 간식·외식</span></h2>
+  /* 오늘 뭘 먹나 — 이 탭에 온 이유다. 요약 바로 밑에 온다. */
+  h += today.length ? today.map(([slot,mid])=>mealCard(slot,mid,t)).join("")
+    : `<div class="card"><h2>오늘은 계획된 끼니가 없어요</h2><div class="muted">[식단표] 탭에서 ${DOWK[dow(t)]}요일의 끼니를 켜거나, 주간표에서 끼니를 눌러 메뉴를 고르면 식단이 잡혀요.</div>
+       <div class="btnrow"><button class="btn primary" onclick="go('plan')">식단표로 가기</button></div></div>`;
+
+  /* 계획 외 섭취 기록 — 매일 쓰는 것이 아니라 접어 둔다 */
+  const xmCard=`
     ${ex.length?ex.map(x=>`<div class="order-row"><div><div class="nm">${escH(x.name)}</div><div class="qy">${x.kcal?x.kcal+"kcal":"열량 미입력"}${x.pro?` · 단백질 ${x.pro}g`:""}</div></div>
       <button class="btn sm" onclick="removeExtraMeal('${x.id}')">삭제</button></div>`).join("")
       :`<div class="tiny">계획에 없던 간식·음료·외식을 적으면 오늘 열량·단백질과 주간 리포트에 합산돼요.</div>`}
@@ -2709,12 +2757,17 @@ function renderToday(){
       <input id="xm-kcal" type="number" placeholder="kcal" min="0" step="10">
       <input id="xm-pro" type="number" placeholder="단백질(g)" min="0" step="1">
       <button class="btn primary" onclick="addExtraMeal()">추가</button>
-    </div></div>`;
+    </div>`;
+  h+=foldCard("xm", "🍪 추가로 먹은 것", ex.length?`${ex.length}개`:"간식·외식", xmCard, ex.length>0);
+
+  /* '지금 만들 수 있는 메뉴'와 '내 재료로 해먹기'는 같은 질문에 두 번 답하고 있었다.
+     한 카드로 합치고 접는다 — 오늘 먹을 것이 이미 정해져 있는 날엔 볼 일이 없다. */
+  let cookNow="";
   const mk=makeableMenus();
   if(mk.length){
-    h+=`<div class="card"><h2>🍳 지금 만들 수 있는 메뉴 <span class="sub">현재 재고 기준</span></h2>
+    cookNow+=`<div class="tiny" style="margin-bottom:5px">지금 재고로 바로 되는 것</div>
       <div class="mk-list">${mk.slice(0,12).map(id=>`<span class="mk-item">${escH(MEALS[id].name)} <span class="tiny">${MEALS[id].kcal}k·P${MEALS[id].pro}</span></span>`).join("")}</div>
-      ${mk.length>12?`<div class="tiny" style="margin-top:6px">외 ${mk.length-12}가지 더</div>`:""}</div>`;
+      ${mk.length>12?`<div class="tiny" style="margin-top:6px">외 ${mk.length-12}가지 더</div>`:""}`;
   }
   /* 내 재료로 해먹기: 직접 산 재료 → 내장 레시피 매칭 + 미매칭은 레시피 검색 */
   const myRec=recipesFromMyItems().filter(r=>r.missing.length<=2);
@@ -2738,9 +2791,12 @@ function renderToday(){
       inner+=myUn.map(m=>`<div class="order-row"><div><div class="nm">${escH(m.name)}</div><div class="qy">앱에 없는 재료 — 레시피를 검색해 보세요</div></div>
         <div class="links">${shopLinks(m.name)}<a class="shop" target="_blank" rel="noopener" href="${recipeSearchUrl(m.name)}">만개의레시피</a></div></div>`).join("");
     }
-    h+=`<div class="card"><h2>🧺 내 재료로 해먹기 <span class="sub">직접 산 재료 기준</span></h2>${inner}
-      <div class="tiny" style="margin-top:7px">재료가 <b>있는지</b>만 보고 고른 목록이에요. 양이 충분한지는 직접 확인하세요.</div></div>`;
+    if(cookNow) cookNow+=`<hr class="h">`;
+    cookNow+=`<div class="tiny" style="margin-bottom:5px">직접 산 재료로 되는 것</div>${inner}`;
   }
+  if(cookNow)
+    h+=foldCard("cook", "🍳 지금 재료로 만들 수 있는 것", mk.length?`${mk.length}가지`:"",
+      cookNow+`<div class="tiny" style="margin-top:7px">재료가 <b>있는지</b>만 보고 고른 목록이에요. 양이 충분한지는 직접 확인하세요.</div>`);
   /* 유통기한 임박 재료 소진 추천 (냉장고 파먹기) */
   const ug=urgentUseMenus();
   if(ug && (ug.menus.length||ug.un.length)){
@@ -2753,11 +2809,9 @@ function renderToday(){
         : `<span class="badge good">지금 가능</span>`;
       return `<div class="order-row"><div><div class="nm">${escH(m.name)}</div><div class="qy">${m.kcal}kcal · ${r.hits.map(k=>ITEMS[k].name).join(", ")} 소진</div></div>${right}</div>`;
     }).join("");
-    if(!ug.menus.length) inner+=`<div class="tiny">앱 레시피에 이 재료를 쓰는 메뉴가 없어요 — 위 '내 재료로 해먹기'의 검색 버튼을 활용하세요.</div>`;
+    if(!ug.menus.length) inner+=`<div class="tiny">앱 레시피에 이 재료를 쓰는 메뉴가 없어요 — [레시피] 탭에서 재료 이름으로 찾아보세요.</div>`;
     h+=`<div class="card"><h2>⏳ 먼저 써야 할 재료 <span class="sub">유통기한 D-3 이내</span></h2>${inner}</div>`;
   }
-  h += today.length ? today.map(([slot,mid])=>mealCard(slot,mid,t)).join("")
-    : `<div class="card"><h2>오늘은 계획된 끼니가 없어요</h2><div class="muted">[식단표] 탭의 스케줄에서 ${DOWK[dow(t)]}요일의 시간대를 켜거나, 주간표에서 끼니를 눌러 메뉴를 고르면 식단이 잡혀요.</div></div>`;
 
   const tm=addDays(t,1); const tmSlots=slotsOf(tm);
   h+=`<div class="card"><h2>🌙 내일 준비 <span class="sub">미리 해둘 것</span></h2>
@@ -2774,14 +2828,14 @@ function scheduleEditorHtml(){
       const on=!!S.schedule[slot][d];
       const mid=on?assignMenu(slot,d):null;
       return `<td><button class="scell ${on?"on":""}" onclick="toggleSlot('${slot}',${d})" aria-pressed="${on}">
-        ${on?`<span class="sc-name">${mid?escH(MEALS[mid].name.replace(/ — .*/,"")):""}</span>`:`<span class="sc-plus">+</span>`}</button></td>`;
+        ${on?`<span class="sc-name">${mid?wrapName(MEALS[mid].name.replace(/ — .*/,"")):""}</span>`:`<span class="sc-plus">+</span>`}</button></td>`;
     }).join("");
     const nut=dayNutrition(d);
     return `<tr><td class="sday">${dk}<div class="sn">${nut.kcal?nut.kcal.toLocaleString()+"k":""}</div></td>${cells}</tr>`;
   }).join("");
   const head = SLOT_ORDER.map(slot=>`<th><button class="sc-th" onclick="editTime('${slot}')">${SLOT_SHORT[slot]}<div class="sn">${S.times[slot]}</div></button></th>`).join("");
   return `<div class="card">
-    <h2>🗓️ 나의 식사 스케줄 <span class="sub">요일·시간대를 켜면 식단이 자동 생성</span></h2>
+    <h2>🗓️ 나의 식사 스케줄 <span class="sub">끼니 켜고 끄기</span></h2>
     <div class="chips">${Object.keys(PRESETS).map(n=>`<button class="chip" onclick="applyPreset('${n}')">${n}</button>`).join("")}</div>
     <div class="chips" style="margin-top:6px">${(S.myPresets||[]).map(p=>`<button class="chip" onclick="applyMyPreset('${p.id}')">💾 ${escH(p.name)}</button>`).join("")}<button class="chip" style="border:1.5px dashed var(--axis);background:transparent" onclick="saveMyPreset()">＋ 현재 스케줄 저장</button></div>
     ${(S.myPresets||[]).length?`<div class="tiny" style="margin-top:4px">내 프리셋을 지우려면: ${(S.myPresets||[]).map(p=>`<a href="javascript:void(0)" onclick="deleteMyPreset('${p.id}')" style="color:var(--crit-text);text-decoration:none">「${escH(p.name)}」 삭제</a>`).join(" · ")}</div>`:""}
@@ -2808,8 +2862,25 @@ function renderPlan(){
   const tierRows = TIER_KEYS.map(t=>`<tr class="${S.tier===t?"on":""}" onclick="setTier(${t})" style="cursor:pointer">
     <td class="n">${t}만</td><td><b>${TIERS[t].name}</b><div class="n" style="color:var(--ink-3)">${TIERS[t].feat}</div></td>
     <td class="n">약 ${(estimateForTier(t)/10000).toFixed(1)}만</td></tr>`).join("");
+  /* 이 탭에 온 이유는 '이번 주에 뭘 먹나'다. 그것이 맨 위에 온다.
+     스케줄 편집기는 그것을 바꾸는 도구, 예상 식비는 그 결과다. 읽는 순서대로 놓는다. */
   $("view-plan").innerHTML=
-    scheduleEditorHtml()
+   `<div class="card">
+    <h2>📅 이번 주 식단 <span class="sub">내 스케줄 반영</span></h2>
+    <table class="plan wk"><tr><th>요일</th><th>끼니</th></tr>${rows}</table>
+    ${(()=>{const ds=[...Array(7)].map((_,d)=>dayNutrition(d)).filter(n=>n.kcal); if(!ds.length)return"";
+      const ak=Math.round(ds.reduce((a,n)=>a+n.kcal,0)/ds.length), ap=Math.round(ds.reduce((a,n)=>a+n.pro,0)/ds.length);
+      const dc=[...Array(7)].map((_,d)=>{const p=planFor(d);let c=0;for(const sl of SLOT_ORDER)if(p[sl])c+=menuCost(p[sl]);return c;}).reduce((a,c)=>a+c,0);
+      return `<hr class="h"><div class="muted" style="font-size:13px">📊 주간 평균 <b>${ak.toLocaleString()}kcal · 단백질 ${ap}g</b>/일 · 주간 식재료 약 ${Math.round(dc).toLocaleString()}원 (하루 목표 ${S.kcalCap.toLocaleString()}kcal·단백질 ${S.proTarget}g)</div>`;})()}
+    <div class="tiny" style="margin-top:7px">각 끼니를 <b>눌러서 직접 메뉴를 고를</b> 수 있어요. ✎ 표시는 내가 고른 메뉴예요.</div>
+    <div class="btnrow">
+      <button class="btn sm" onclick="shuffleWeek()">🔀 이번 주 셔플</button>
+      <button class="btn sm" onclick="resetAllCustom()">전체 자동 추천으로</button>
+      <button class="btn sm" onclick="shareWeekText()">📤 텍스트 공유</button>
+      <button class="btn sm" onclick="shareWeekImage()">🖼️ 이미지 저장</button>
+    </div>
+  </div>`
+  + scheduleEditorHtml()
   +`<div class="card">
     <h2>💰 예상 월 식비 <span class="sub">주 ${mpw}끼 · ${S.tier}만 등급</span></h2>
     <div class="muted">지금 스케줄·메뉴로 식재료비는 한 달 약 <b>${est.toLocaleString()}원</b>이에요. 이번 달 예산 ${(tierBudget()/10000).toFixed(0)}만 원에서 ${discretionaryRoom()>=0?`<b style="color:var(--good-text)">${discretionaryRoom().toLocaleString()}원</b>이 남아 외식·간식에 쓸 수 있어요`:`<b style="color:var(--crit-text)">${(-discretionaryRoom()).toLocaleString()}원</b>이 모자라요 — 메뉴를 가볍게 하거나 등급을 올리세요`}.</div>
@@ -2818,41 +2889,21 @@ function renderPlan(){
     ${tierPickerHtml()}
     <table class="tiers" style="margin-top:8px">${tierRows}</table>
     <div class="tiny" style="margin-top:8px">등급을 올리면 연어·소고기·한우 같은 재료가 식단에 들어오고, 고를 수 있는 메뉴도 늘어납니다.<br>비싼 재료가 섞이면 <b>예상액이 등급 금액을 넘을 수 있어요</b> — 그때는 메뉴를 가벼운 것으로 바꾸면 내려갑니다. 표의 금액은 지금 스케줄로 다시 계산한 값이에요.</div>
-  </div><div class="card">
-    <h2>🍽️ 이 식단의 특징</h2>
-    <div class="muted">단백질원을 닭·돼지·계란·두부·참치(상위 등급은 연어·소고기·한우)로 돌려 질리지 않는 고단백 유지형 식단입니다. 모든 메뉴가 팬 하나로 10~15분 조리이고, 2026년 7월 기준 최저가로 계산했어요(가격은 변합니다). 아래 주간표는 <b>내 스케줄대로</b> 자동 생성된 결과입니다.</div>
-  </div><div class="card">
-    <h2>📅 이번 주 식단 <span class="sub">스케줄 반영</span></h2>
-    <table class="plan wk"><tr><th>요일</th><th>끼니</th></tr>${rows}</table>
-    ${(()=>{const ds=[...Array(7)].map((_,d)=>dayNutrition(d)).filter(n=>n.kcal); if(!ds.length)return"";
-      const ak=Math.round(ds.reduce((a,n)=>a+n.kcal,0)/ds.length), ap=Math.round(ds.reduce((a,n)=>a+n.pro,0)/ds.length);
-      const dc=[...Array(7)].map((_,d)=>{const p=planFor(d);let c=0;for(const sl of SLOT_ORDER)if(p[sl])c+=menuCost(p[sl]);return c;}).reduce((a,c)=>a+c,0);
-      return `<hr class="h"><div class="muted" style="font-size:13px">📊 주간 평균 <b>${ak.toLocaleString()}kcal · 단백질 ${ap}g</b>/일 · 주간 식재료 약 ${Math.round(dc).toLocaleString()}원 (하루 목표 ${S.kcalCap.toLocaleString()}kcal·단백질 ${S.proTarget}g)</div>`;})()}
-    <div class="tiny" style="margin-top:7px">각 끼니를 <b>눌러서 직접 메뉴를 고를</b> 수 있어요. ✎ 표시는 내가 고른 메뉴예요. 요일 아래 숫자는 그날 총 열량·단백질입니다.</div>
-    <div class="btnrow">
-      <button class="btn sm" onclick="shuffleWeek()">🔀 이번 주 셔플</button>
-      <button class="btn sm" onclick="resetAllCustom()">전체 자동 추천으로</button>
-      <button class="btn sm" onclick="shareWeekText()">📤 텍스트 공유</button>
-      <button class="btn sm" onclick="shareWeekImage()">🖼️ 이미지 저장</button>
-    </div>
-  </div><div class="card">
-    <h2>🧑‍🍳 일요일 30분 밑준비 루틴</h2>
-    <div class="muted" style="font-size:13px">
+  </div>`
+  + foldCard("planfeat", "🍽️ 이 식단의 특징", "",
+    `<div class="muted">단백질원을 닭·돼지·계란·두부·참치(상위 등급은 연어·소고기·한우)로 돌려 질리지 않는 고단백 유지형 식단입니다. 모든 메뉴가 팬 하나로 10~15분 조리이고, 2026년 7월 기준 최저가로 계산했어요(가격은 변합니다).</div>`)
+  + foldCard("planprep", "🧑‍🍳 일요일 30분 밑준비", "평일을 10분으로",
+    `<div class="muted" style="font-size:13px">
     ① 계란 6~8개 삶기(끓는 물 8~11분 → 얼음물 → 냉장 7일) — 간식·아침용<br>
     ② 밥솥으로 밥 몰아 짓고 140~150g씩 소분 → 냉장 3일/냉동 그 이상<br>
     ③ 배송 온 냉동육은 그날 200~280g씩 소분해 냉동(한 끼 한 팩)<br>
     ④ 격주로 고구마 몰아 찌기(밥솥 만능찜 30분 → 냉장 5일)<br>
-    이 30분이 평일 요리를 전부 10분 안쪽으로 만들어 줍니다.</div>
-  </div><div class="card">
-    <h2>📖 전체 레시피 모음</h2>
-    <div class="tiny" style="margin-bottom:4px">눌러서 펼쳐보세요. 오늘 탭의 각 끼니 카드에서도 같은 레시피가 열립니다.</div>
-    ${Object.values(MEALS).map(m=>`<details class="rsteps" style="margin-top:9px"><summary>${escH(m.name)} — ${m.kcal}kcal · P${m.pro}g</summary>
-      <div class="tiny" style="margin:5px 0 0">${escH(m.ing)}</div>
-      <ol>${(m.steps||[]).map(x=>`<li>${escH(x)}</li>`).join("")}</ol>${m.tip?`<div class="rtip">💡 ${escH(m.tip)}</div>`:""}</details>`).join("")}
-  </div>`;
+    이 30분이 평일 요리를 전부 10분 안쪽으로 만들어 줍니다.</div>`);
 }
 function renderStock(){
-  const st={냉동:[],냉장:[],실온:[]};
+  /* 한 번도 산 적 없는 재료는 '재고'가 아니라 '앞으로 살 것'이다.
+     세 카드에 섞여 있으면 실제로 가진 것을 찾기 어렵다 → 따로 모아 접는다. */
+  const st={냉동:[],냉장:[],실온:[]}, none=[];
   const used=usedItemIds();
   for(const id in ITEMS){
     if(!used.has(id) && stockOf(id)<=0) continue;
@@ -2880,11 +2931,16 @@ function renderStock(){
         </span>
       </div>
     </div>`;
-    (it.storage.startsWith("냉동")?st.냉동:it.storage.startsWith("냉장")?st.냉장:st.실온).push(row);
+    if(s.level==="none") none.push(row);
+    else (it.storage.startsWith("냉동")?st.냉동:it.storage.startsWith("냉장")?st.냉장:st.실온).push(row);
   }
   $("view-stock").innerHTML=myStockCard()
-    +["냉동","냉장","실온"].map(k=>
-    `<div class="card"><h2>${k==="냉동"?"🧊":k==="냉장"?"🥛":"🌾"} ${k} 보관</h2><div class="inv">${st[k].join("")}</div></div>`).join("")
+    +["냉동","냉장","실온"].map(k=> st[k].length
+      ? `<div class="card"><h2>${k==="냉동"?"🧊":k==="냉장"?"🥛":"🌾"} ${k} 보관 <span class="sub">${st[k].length}가지</span></h2><div class="inv">${st[k].join("")}</div></div>`
+      : "").join("")
+    + (none.length ? foldCard("stocknone", "📥 아직 안 산 재료", none.length+"가지",
+        `<div class="tiny" style="margin-bottom:6px">식단에 쓰이지만 한 번도 산 적이 없어요. 얼마나 살지는 [주문] 탭이 계산해 둡니다.</div>`
+        + `<div class="inv">${none.join("")}</div>`) : "")
     +`<div class="card tiny">＋/− 버튼은 품목별 한 단위(계란 1개, 두부 1모, 고기 100g 등)씩 보정합니다. 앱은 식단대로 먹는다고 가정하고 자동 차감하니, 실제와 다를 때만 보정하면 돼요.</div>`;
 }
 
@@ -3015,7 +3071,10 @@ function renderOrder(){
   $("view-order").innerHTML=h;
 }
 function renderData(){
-  $("view-data").innerHTML=guideCardHtml()+reportCardHtml()+statsCardHtml()+avoidCardHtml()+installCardHtml()+`<div class="card"><h2>💾 기록 저장·복원</h2>
+  $("view-data").innerHTML=settingsCardHtml()+reportCardHtml()+statsCardHtml()
+    +foldCard("avoid", "🚫 제외 재료", (S.avoid||[]).length?`${(S.avoid||[]).length}가지 제외 중`:"알레르기·비선호", avoidBodyHtml())
+    +installCardHtml()
+    +foldCard("backup", "💾 기록 저장·복원", "기기를 바꿀 때", `
     <div class="muted">${lsAvailable()
       ?`✅ <b>자동 저장 켜짐</b> — 기록이 이 기기의 브라우저에 자동 저장돼서, 닫았다 다시 열어도 이어집니다. <b>기기를 바꾸거나 파일을 새로 받았을 때만</b> 내보내기→가져오기로 옮기세요. 만약을 대비한 백업용으로도 좋아요.`
       :`⚠️ 이 환경에서는 자동 저장이 안 돼요 — <b>기록이 생긴 날엔 내보내기</b>로 저장하고, 다음에 열 때 가져오면 이어집니다.`}</div>
@@ -3030,22 +3089,11 @@ function renderData(){
     <div class="btnrow" style="margin-top:6px"><button class="btn" onclick="importPasted()">붙여넣은 코드로 복원</button></div>
     <div class="tiny" style="margin-top:4px">복원하면 지금 기록이 전부 바뀌어요. 무엇이 들어오는지 먼저 보여 드리고, 바꾼 뒤에도 한 번은 되돌릴 수 있습니다.</div>
     <hr class="h">
-    <label class="f">현재 설정</label>
-    <div class="muted" style="font-size:13px">스케줄 주 <b>${mealsPerWeek()}끼</b> · 재료 <b>${S.tier}만 등급(${(TIERS[S.tier]||{name:"사용자"}).name})</b> → 식재료 예상 <b>${fmt(monthlyEstimate())}</b> · 이번 달 예산 ${fmt(tierBudget())} · 외식·간식 여유 ${fmt(Math.max(0,discretionaryRoom()))}.</div>
-    <label class="f">하루 목표 열량 (kcal)</label>
-    <input type="number" value="${S.kcalCap}" step="100" min="1000" max="4000" onchange="S.kcalCap=Math.max(1000,Math.min(4000,+this.value||2700));render()">
-    <label class="f">하루 목표 단백질 (g)</label>
-    <input type="number" value="${S.proTarget}" step="10" min="40" max="250" onchange="S.proTarget=Math.max(40,Math.min(250,+this.value||100));render()">
-    <div class="tiny" style="margin-top:5px">메뉴를 고를 때 이 열량을 넘는 메뉴는 회색으로 잠겨요. 기본 2,700kcal은 체중 유지 기준에 여유를 더한 값입니다.</div>
-    <label class="f">몇 인분으로 요리하나요?</label>
-    <div class="chips">${[1,2,3,4].map(n=>`<button class="chip ${svN()===n?"on":""}" onclick="S.servings=${n};render()">${n}인분</button>`).join("")}</div>
-    <div class="tiny" style="margin-top:4px">재료 양·비용·재고 차감·장보기가 ×${svN()}로 계산돼요. 영양 표시는 1인분 기준 그대로예요.</div>
-    <hr class="h">
     <div class="btnrow"><button class="btn" style="color:var(--crit-text)" onclick="resetRecords()">기록 초기화</button>
       <button class="btn" onclick="if(confirm('스케줄을 기본(직장인)으로 되돌릴까요?')){S.schedule=defaultSchedule();S.times={...DEFAULT_TIMES};render();}">스케줄 기본값</button>
-      <button class="btn" onclick="if(confirm('이 기기에 자동 저장된 데이터를 지울까요? (지금 화면의 상태는 유지되지만, 새로 열 때는 초기 상태로 시작해요)')){clearLocal();alert('자동 저장 데이터를 지웠어요.');}">자동 저장 지우기</button></div>
-  </div>
-  <div class="card"><h2>📖 사용법 요약</h2>
+      <button class="btn" onclick="if(confirm('이 기기에 자동 저장된 데이터를 지울까요? (지금 화면의 상태는 유지되지만, 새로 열 때는 초기 상태로 시작해요)')){clearLocal();alert('자동 저장 데이터를 지웠어요.');}">자동 저장 지우기</button></div>`)
+  + guideCardHtml()
+  + foldCard("howto", "📖 사용법 요약", "8줄", `
     <div class="muted" style="font-size:13px">
     ① [주문] 탭 목록대로 장보기 → 도착하면 <b>입고 처리</b> (지출·유통기한 자동 기록)<br>
     ② 매일은 그냥 식단대로 먹기 — 재고는 자동 차감<br>
@@ -3054,8 +3102,8 @@ function renderData(){
     ⑤ 재고가 실제와 다르면 [재고]에서 ＋/− — 고친 내용은 [주문] 탭 내역에 한 줄로 남고 지울 수 있어요<br>
     ⑥ 소진·유통기한 경고 뜨면 [주문]에서 링크로 재주문<br>
     ⑦ 기록은 이 기기에 <b>자동 저장</b> — 기기를 바꿀 때만 왼쪽 위 ⚙︎ 설정에서 내보내기<br>
-    ⑧ 예산이 달라지면 [식단표]에서 등급을 바꾸세요 — 식단과 주문 목록이 함께 바뀝니다</div></div>
-  <div class="tiny" style="text-align:center;margin:14px 0 4px">식단 매니저 v${APP_VER} · 개인용 무료 앱</div>`;
+    ⑧ 예산이 달라지면 [식단표]에서 등급을 바꾸세요 — 식단과 주문 목록이 함께 바뀝니다</div>`)
+  +`<div class="tiny" style="text-align:center;margin:14px 0 4px">식단 매니저 v${APP_VER} · 개인용 무료 앱</div>`;
 }
 /* ============================================================ 동작 ============================================================ */
 function markEaten(k){
@@ -3455,7 +3503,7 @@ function applyTheme(){
   tb.title = S.theme==="auto"?"자동":S.theme==="light"?"라이트":"다크";
 }
 /* ============================================================ PWA — 설치·오프라인·업데이트 (웹주소로 열릴 때만 활성화, file://은 기존 그대로) ============================================================ */
-const APP_VER="27.0";
+const APP_VER="27.1";
 const IS_NATIVE=location.protocol==="capacitor:"||!!window.Capacitor;   // 앱스토어(iOS) 네이티브 셸
 const IS_HTTP=(location.protocol==="http:"||location.protocol==="https:")&&!IS_NATIVE;
 let _installEvt=null, _swWaiting=null;
