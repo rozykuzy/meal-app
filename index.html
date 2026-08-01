@@ -289,9 +289,10 @@ main, header, #alerts, .sheet, .toast{overflow-wrap:anywhere}
 .buy-note{color:var(--ink-3); font-size:12px; margin-top:3px; line-height:1.5}
 .buy-sec .order-row:last-of-type{border-bottom:0}
 .buy-ship{font-size:12px; color:var(--ink-2); margin-top:8px; line-height:1.5}
-.buy-big{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:2px 0 0}
+.buy-big{display:flex; align-items:baseline; justify-content:space-between; gap:6px 10px;
+  flex-wrap:wrap; margin:2px 0 0}
 .buy-big .n{font-size:26px; font-weight:800; letter-spacing:-.6px; white-space:nowrap}
-.buy-big .u{font-size:12.5px; color:var(--ink-2); text-align:right; line-height:1.5}
+.buy-big .u{font-size:12.5px; color:var(--ink-2); text-align:right; line-height:1.5; min-width:0}
 .buy-big .u .nw{white-space:nowrap}   /* "11가지는 지금 없음"이 줄 중간에서 갈라지지 않게 */
 /* 접히는 카드 — 자주 안 보는 것은 접어 두되 사라지지는 않게 */
 .fold-h{display:flex; align-items:center; gap:8px; width:100%; min-height:44px; box-sizing:border-box;
@@ -300,6 +301,55 @@ main, header, #alerts, .sheet, .toast{overflow-wrap:anywhere}
 .fold-h h2{margin:0; flex:1; min-width:0}
 .fold-h .fx{flex:none; color:var(--ink-3); font-size:12px; font-weight:800}
 .fold-b{padding-top:4px}
+/* 끼니 설정 — 끼니 하나가 두 줄(이름·시간 / 언제 먹는지)을 쓴다.
+   한 줄에 다 넣으면 320px 화면에서 네 칸이 눌리지 않을 만큼 좁아진다. */
+.mset{margin-top:6px}
+.mset-row{padding:11px 0; border-bottom:1px solid var(--grid)}
+.mset-row:last-child{border-bottom:0}
+.mset-top{display:flex; align-items:center; gap:10px; min-height:44px}
+.mset-nm{font-weight:700; font-size:14.5px; flex:1; min-width:0}
+.mset-off{font-size:12.5px; color:var(--ink-3)}
+.mset-time{flex:none; border:1px solid var(--axis); background:var(--surface-1); color:var(--ink-1);
+  border-radius:12px; padding:0 12px; min-height:44px; font-size:15px; font-family:inherit;
+  font-variant-numeric:tabular-nums; -webkit-appearance:none; appearance:none}
+.mset-seg{display:flex; gap:3px; background:var(--grid); border-radius:var(--r-cap); padding:3px; margin-top:2px}
+.mset-seg button{flex:1 1 0; min-width:0; min-height:44px; border:0; background:transparent; color:var(--ink-2);
+  font-family:inherit; font-size:12.5px; font-weight:700; border-radius:var(--r-cap); cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; white-space:nowrap;
+  -webkit-appearance:none; appearance:none; touch-action:manipulation}
+.mset-seg button.on{background:var(--surface-1); color:var(--accent-text); box-shadow:0 1px 3px rgba(0,0,0,.10)}
+.mset-note{font-size:11.5px; color:var(--ink-3); margin-top:7px}
+/* 예산 입력 — 금액이 주인공이라 크게, 단위는 옆에 */
+.bud-set{margin-top:8px}
+.bud-in{display:block; width:100%; box-sizing:border-box; border:1px solid var(--axis); background:var(--surface-1); color:var(--ink-1);
+  border-radius:14px; padding:10px 14px; min-height:52px; font-size:24px; font-weight:800; font-family:inherit;
+  font-variant-numeric:tabular-nums; letter-spacing:-.4px; -webkit-appearance:none; appearance:none}
+.bud-in:focus{outline:none; border-color:var(--accent)}
+.bud-now{display:flex; align-items:flex-start; gap:10px; margin-top:12px; padding:12px 13px;
+  background:var(--page); border:1px solid var(--ring); border-radius:16px}
+.bud-now > div{flex:1; min-width:0; font-size:13.5px}
+.bud-now .badge{flex:none; margin-top:1px}
+/* 이번 달 속도 제안 */
+.pace{display:flex; align-items:center; gap:10px; margin-top:10px; padding:11px 13px; border-radius:14px}
+.pace > div{flex:1; min-width:0; font-size:13px}
+.pace.up{background:var(--good-bg); color:var(--good-text)}
+.pace.down{background:var(--serious-bg); color:var(--serious)}
+.pace .btn{flex:none}
+/* 예산 막대 — 이미 쓴 것(진한 색)과 앞으로 살 것(연한 색)을 나눠 보여 준다 */
+.bar2{display:flex; height:9px; background:var(--grid); border-radius:5px; margin:10px 0 2px; overflow:hidden}
+.bar2 i{display:block; height:100%}
+.bar2 .a{background:var(--accent)}
+.bar2 .b{background:var(--accent-soft)}
+/* '다 사고 나면' 은 앞의 줄들을 더한 결과다 — 총계처럼 한 칸 띄우고 굵게 */
+.bgt-row.after{border-top:1px solid var(--axis); border-bottom:0; margin-top:2px; padding-top:9px}
+.bgt-row.after span{color:var(--ink-1); font-weight:600}
+.bgt-row.after b{font-size:15px}
+.tiny.hint{margin-top:8px; padding:9px 11px; background:var(--grid); border-radius:12px; line-height:1.55}
+/* 첫 실행 세팅 시트 */
+.setup-back{position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:240}
+.setup-box{position:fixed; left:0; right:0; bottom:0; z-index:241; background:var(--surface-1);
+  border-radius:22px 22px 0 0; padding:18px 18px calc(18px + env(safe-area-inset-bottom));
+  max-height:88vh; overflow:auto; box-shadow:0 -8px 40px rgba(0,0,0,.18)}
 .alertbox{border-radius:16px; padding:12px 14px; margin-bottom:9px; font-size:13px; display:flex; gap:9px; align-items:flex-start}
 .alertbox.warn{background:var(--warn-bg)} .alertbox.serious{background:var(--serious-bg)}
 .alertbox.crit{background:var(--crit-bg)} .alertbox.info{background:var(--accent-soft)}
@@ -632,7 +682,7 @@ main section{animation:viewIn 150ms var(--ease-out-strong)}
    기기를 옮길 때는 [설정 → 기록 저장·복원]의 내보내기/가져오기를 사용합니다.
    ============================================================ */
 /* 내보내기·가져오기에 담는 상태 키 목록(테마·요리 사진 기록은 별도 저장) */
-const SYNC_KEYS = ["tier","schedule","times","custom","favs","shuffle","kcalCap","proTarget","inbound","skips","eaten","adj","myItems","shoplist","avoid","extraMeals","myRecipes","nick","menuMods","habits","cookStats","servings","myPresets","dayPlan","lastSeen"];
+const SYNC_KEYS = ["tier","schedule","times","custom","favs","shuffle","kcalCap","proTarget","inbound","skips","eaten","adj","myItems","shoplist","avoid","extraMeals","myRecipes","nick","menuMods","habits","cookStats","servings","myPresets","dayPlan","lastSeen","budget","tierAuto"];
 /* 구 그룹 기능의 변경이력 훅 — 로컬 전용에선 기록할 곳이 없어 아무 것도 하지 않는다 */
 function logAction(){}
 /* 가벼운 토스트 알림 — 두 번째 인자를 주면 [되돌리기] 버튼이 함께 뜬다 */
@@ -1150,16 +1200,17 @@ const DAILY_KCAL_FLOOR = 1500; // 이하이면 '가벼운 날' 넛지(차단 아
 const SLOT_LABEL = {brk:"☀️ 아침", lunch:"🍱 점심", dinner:"🌙 저녁", snack:"🥚 간식"};
 const SLOT_SHORT = {brk:"아침", lunch:"점심", dinner:"저녁", snack:"간식"};
 const DEFAULT_TIMES = {brk:"08:00", lunch:"12:30", dinner:"19:00", snack:"16:00"};
-/* 프리셋: 각 슬롯의 요일(일~토) on/off */
-const PRESETS = {
-  "직장인 기본": {brk:[1,0,0,0,0,0,1], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[0,1,1,1,1,1,0]},
-  "매일 세 끼": {brk:[1,1,1,1,1,1,1], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[0,0,0,0,0,0,0]},
-  "세 끼+간식": {brk:[1,1,1,1,1,1,1], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[1,1,1,1,1,1,1]},
-  "아침 거르기": {brk:[0,0,0,0,0,0,0], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[1,1,1,1,1,0,0]},
-  "저녁만": {brk:[0,0,0,0,0,0,0], lunch:[0,0,0,0,0,0,0], dinner:[1,1,1,1,1,1,1], snack:[0,0,0,0,0,0,0]},
-  "간헐적 단식 16:8": {brk:[0,0,0,0,0,0,0], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[0,0,0,0,0,0,0], times:{lunch:"12:00", dinner:"19:30"}},
-  "운동 집중": {brk:[1,1,1,1,1,1,1], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[1,1,1,1,1,1,1], times:{brk:"07:30", snack:"17:30", dinner:"19:30"}},
+/* 끼니마다 '언제 먹는지'를 고르는 네 가지.
+   예전에는 "직장인 기본"·"간헐적 단식 16:8" 같은 생활방식 이름표가 붙은 프리셋 7개였다.
+   학생·자영업자·교대근무자에게는 맞지 않는 이름이고, 무엇보다 그중 하나가
+   '기본값'으로 박혀 있었다. 사람을 분류하지 않고 행동만 묻는 네 칸으로 바꿨다. */
+const MEAL_WHEN = {
+  off:     {label:"안 먹어요", days:[0,0,0,0,0,0,0]},
+  daily:   {label:"매일",      days:[1,1,1,1,1,1,1]},
+  weekday: {label:"평일만",    days:[0,1,1,1,1,1,0]},
+  weekend: {label:"주말만",    days:[1,0,0,0,0,0,1]},
 };
+const MEAL_WHEN_ORDER = ["off","daily","weekday","weekend"];
 /* ── 예산 티어: 스왑은 누적 적용, 비용은 코드로 검증된 월 예상치 ── */
 const TIERS = {
   20:{name:"기본기", cost:197800, feat:"검증 최저가로 짠 고단백 유지 식단 — 이 시스템의 뼈대"},
@@ -1251,7 +1302,7 @@ function otherSlotsKcal(d, exceptSlot){
 }
 function menuAvailable(d, slot, id){
   const need=menuTierMin(id);
-  if(need>(S.tier||20)) return {ok:false, reason:need+"만 등급 필요"};
+  if(need>(S.tier||20)) return {ok:false, reason:(TIERS[need]?TIERS[need].name:need+"만")+" 수준부터"};
   if(menuUsesAvoided(id)) return {ok:false, reason:"제외 재료 포함"};
   const dayK=otherSlotsKcal(d,slot)+MEALS[id].kcal;
   if(dayK>dayKcalCeil(d)) return {ok:false, reason:"칼로리 초과"};
@@ -1275,7 +1326,64 @@ function weeklyMealCost(){
 function monthlyEstimate(){ // 식재료비(그로서리)만 — 외식·구독 등 재량은 별도
   return Math.round((weeklyMealCost()*4.3)/100)*100;
 }
-function tierBudget(){ return (S.tier||20)*10000; }
+/* ── 예산과 메뉴 수준을 갈라 놓는다 ──────────────────────────────
+   지금까지는 S.tier 하나가 '한 달 예산'이자 '메뉴 수준'이었다.
+   그래서 하루 4끼를 먹든 2끼를 먹든 30만 원이면 같은 메뉴가 나왔다.
+   끼니를 줄여 남은 돈이 어디에도 쓰이지 않고 그냥 남았다.
+
+   이제 사용자가 정하는 것은 **한 달 식재료비(S.budget)** 하나뿐이고,
+   메뉴 수준(S.tier)은 그 예산을 지금 내 끼니 수로 나눈 값에서 앱이 고른다.
+   같은 30만 원이라도 하루 4끼면 한 끼 1,900원, 2끼면 4,900원이 된다. */
+function tierBudget(){ return +S.budget || (S.tier||20)*10000; }
+function perMealBudget(){ const n=mealsPerWeek(); return n ? tierBudget()/(n*4.3) : 0; }
+/* 이 예산 안에 들어가는 가장 높은 메뉴 수준. TIERS 는 비용이 오름차순이다. */
+function fitTier(budget){
+  let best=TIER_KEYS[0];
+  for(const t of TIER_KEYS){ if(estimateForTier(t)<=budget) best=t; else break; }
+  return best;
+}
+/* 끼니를 바꾸면 그 자리에서 메뉴 수준을 다시 맞춘다.
+   내가 직접 수준을 고른 사람(S.tierAuto===false)에게는 손대지 않는다.
+   바뀐 것은 토스트로 알리고 되돌릴 수 있게 한다 — 말없이 바꾸지 않는다. */
+function autoFitTier(){
+  if(S.tierAuto===false) return null;
+  const want=fitTier(tierBudget());
+  if(want===S.tier) return null;
+  const prev=S.tier; S.tier=want;
+  return {prev, now:want};
+}
+/* 이번 달 남은 예산으로 남은 날들을 채운다면 어느 수준이 맞는가.
+   초반에 아꼈으면 넉넉해지고, 많이 썼으면 낮아진다.
+   이건 '제안'으로만 쓴다 — 장을 본 뒤 메뉴가 저절로 바뀌면 산 재료가 남는다. */
+function paceTier(){
+  const d=parseD(todayStr());
+  const last=new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+  const gone=d.getDate(), leftDays=last-gone+1;
+  if(leftDays<=0) return null;
+  /* 한 달치를 몰아서 사는 앱이라 달 초에는 지출이 한쪽으로 쏠린다.
+     1일에 쌀 한 포대를 샀다고 "너무 빠르다"고 하면 그건 앱이 틀린 것이다.
+     일주일은 지나야 빠른지 느린지를 말할 수 있다. */
+  if(gone<7) return null;
+  /* 남은 날을 먹일 수 있는 돈은 '예산 − 실제로 쓴 돈'이다.
+     여기서 [살 것]에 담긴 것까지 빼면 한 달치 장을 이미 다 본 셈이 되어,
+     남는 것은 잉여뿐이라 언제나 "메뉴를 낮추라"고만 하게 된다. */
+  const leftWon=tierBudget()-monthSpentSplit().total;
+  if(leftWon<=0) return {t:TIER_KEYS[0], leftWon, leftDays};
+  const monthlyEquiv=leftWon/(leftDays/last);             // 남은 기간 예산을 한 달치로 환산
+  return {t:fitTier(monthlyEquiv), leftWon, leftDays};
+}
+function setBudget(v){
+  /* 화면에는 "300,000원"으로 보여 주고, 사람이 뭘 적든 숫자만 뽑아 쓴다.
+     '만' 단위로 적는 사람이 많아 100 이하로 들어오면 만 원으로 읽는다. */
+  let raw=String(v==null?"":v).replace(/[^0-9]/g,"");
+  let n=+raw||0; if(n>0 && n<=300) n*=10000;
+  const won=Math.max(50000, Math.min(3000000, Math.round(n/10000)*10000));
+  const prevB=tierBudget(), prevT=S.tier, prevA=S.tierAuto;
+  S.budget=won; S.tierAuto=true;
+  const ch=autoFitTier(); render();
+  toast("한 달 식재료비 "+fmt(won)+(ch?" · 메뉴 "+TIERS[ch.now].name:""),
+    ()=>{ S.budget=prevB; S.tier=prevT; S.tierAuto=prevA; });
+}
 function discretionaryRoom(){ return tierBudget()-monthlyEstimate(); } // +면 여유, -면 초과
 function estimateForTier(t){
   const cur=S.tier; S.tier=t; const v=monthlyEstimate(); S.tier=cur; return v;
@@ -1549,18 +1657,17 @@ function menuUsesAvoided(id){
   const u=(MEALS[id]&&MEALS[id].use)||{}; return Object.keys(u).some(k=>av.includes(k));
 }
 function toggleAvoid(id){ if(!Array.isArray(S.avoid)) S.avoid=[]; const i=S.avoid.indexOf(id); if(i>=0)S.avoid.splice(i,1); else S.avoid.push(id); render(); }
-function avoidCardHtml(){
+function avoidBodyHtml(){
   const av=S.avoid||[];
-  return `<div class="card"><h2>🚫 제외 재료 <span class="sub">알레르기·비선호</span></h2>
+  return `
     <div class="tiny" style="margin-bottom:8px">선택한 재료가 들어간 메뉴는 자동 식단에서 빠지고, 메뉴 고르기에서 회색으로 잠겨요.</div>
     <div class="chips" style="flex-wrap:wrap">${AVOID_CHOICES.map(id=>`<button class="chip ${av.includes(id)?"on":""}" onclick="toggleAvoid('${id}')">${ITEMS[id].name.replace(/\(.*?\)/g,"").trim()}</button>`).join("")}</div>
-    ${av.length?`<div class="tiny" style="margin-top:7px;color:var(--serious)">제외가 많으면 고를 메뉴가 줄어요. 한 끼니의 후보가 전부 제외되면 기본 메뉴가 그대로 나올 수 있어요.</div>`:""}
-  </div>`;
+    ${av.length?`<div class="tiny" style="margin-top:7px;color:var(--serious)">제외가 많으면 고를 메뉴가 줄어요. 한 끼니의 후보가 전부 제외되면 기본 메뉴가 그대로 나올 수 있어요.</div>`:""}`;
 }
 /* 매번 만지는 설정은 제 이름을 가진 카드로 앞에 둔다.
    지금까지는 '기록 저장·복원' 카드 안에, 백업 설명 아래에 묻혀 있었다. */
 function settingsCardHtml(){
-  return `<div class="card"><h2>⚙️ 내 설정 <span class="sub">주 ${mealsPerWeek()}끼 · ${S.tier}만 등급</span></h2>
+  return `<div class="card"><h2>⚙️ 내 설정 <span class="sub">주 ${mealsPerWeek()}끼 · ${TIERS[S.tier].name}</span></h2>
     <div class="muted" style="font-size:13px">식재료 예상 <b>${fmt(monthlyEstimate())}</b> · 이번 달 예산 ${fmt(tierBudget())} · 외식·간식 여유 ${fmt(Math.max(0,discretionaryRoom()))}</div>
     <hr class="h">
     <label class="f">하루 목표 열량 (kcal)</label>
@@ -1572,13 +1679,6 @@ function settingsCardHtml(){
     <div class="chips">${[1,2,3,4].map(n=>`<button class="chip ${svN()===n?"on":""}" onclick="S.servings=${n};render()">${n}인분</button>`).join("")}</div>
     <div class="tiny" style="margin-top:4px">재료 양·비용·재고 차감·장보기가 ×${svN()}로 계산돼요. 영양 표시는 1인분 기준 그대로예요.</div>
   </div>`;
-}
-function avoidBodyHtml(){
-  const av=S.avoid||[];
-  return `
-    <div class="tiny" style="margin-bottom:8px">선택한 재료가 들어간 메뉴는 자동 식단에서 빠지고, 메뉴 고르기에서 회색으로 잠겨요.</div>
-    <div class="chips" style="flex-wrap:wrap">${AVOID_CHOICES.map(id=>`<button class="chip ${av.includes(id)?"on":""}" onclick="toggleAvoid('${id}')">${ITEMS[id].name.replace(/\(.*?\)/g,"").trim()}</button>`).join("")}</div>
-    ${av.length?`<div class="tiny" style="margin-top:7px;color:var(--serious)">제외가 많으면 고를 메뉴가 줄어요. 한 끼니의 후보가 전부 제외되면 기본 메뉴가 그대로 나올 수 있어요.</div>`:""}`;
 }
 /* ============================================================ 유통기한 임박 재료 소진 추천 ============================================================ */
 function urgentKeys(){
@@ -1683,6 +1783,10 @@ function ensureInboundIds(){
   for(const r of S.inbound) if(r && !r.id) r.id=uid("ib");
   absorbAdj();
   sanitizeUserText();
+  /* 예전 기록에는 예산이 따로 없었다 — 그때는 '등급 금액'이 곧 예산이었다.
+     그 값을 그대로 예산으로 옮겨 오면 쓰던 사람에게 달라지는 것이 없다. */
+  if(!(+S.budget)) S.budget=(S.tier||20)*10000;
+  if(S.tierAuto===undefined) S.tierAuto=true;
 }
 /* 구버전의 보이지 않던 재고 보정값(S.adj)을 눈에 보이는 기록 한 줄로 옮긴다. */
 function absorbAdj(){
@@ -1792,7 +1896,7 @@ function shuffleWeek(){
 function toggleFav(id){ const i=(S.favs||[]).indexOf(id); if(i>=0)S.favs.splice(i,1); else{ if(!S.favs)S.favs=[]; S.favs.push(id);} render(); }
 /* ⑤ 주간 식단 텍스트 */
 function weekPlanText(){
-  let out="📅 이번 주 식단 ("+S.tier+"만 등급)\n";
+  let out="📅 이번 주 식단 ("+TIERS[S.tier].name+")\n";
   for(let d=0; d<7; d++){ const p=planFor(d); const parts=SLOT_ORDER.filter(sl=>p[sl]).map(sl=>SLOT_SHORT[sl]+" "+MEALS[p[sl]].name);
     out += DOWK[d]+": "+(parts.length?parts.join(" / "):"—")+"\n"; }
   out += "\n식단매니저 앱으로 만들었어요.";
@@ -1812,7 +1916,7 @@ function shareWeekImage(){
   const bg=dark?"#1c1c1e":"#ffffff", ink=dark?"#f5f5f7":"#1d1d1f", sub=dark?"#9a9aa0":"#6e6e73", line=dark?"#2c2c2e":"#f0f0f2", acc=dark?"#2997ff":"#0071e3";
   x.fillStyle=bg; x.fillRect(0,0,C.width,C.height);
   x.fillStyle=ink; x.font="800 34px sans-serif"; x.fillText("이번 주 식단", 32, 56);
-  x.fillStyle=sub; x.font="500 20px sans-serif"; x.fillText(S.tier+"만 등급 · 하루 평균 목표 "+S.kcalCap.toLocaleString()+"kcal", 32, 82);
+  x.fillStyle=sub; x.font="500 20px sans-serif"; x.fillText(TIERS[S.tier].name+" · 하루 평균 목표 "+S.kcalCap.toLocaleString()+"kcal", 32, 82);
   for(let d=0; d<7; d++){ const y=headH+rowH*d;
     x.strokeStyle=line; x.beginPath(); x.moveTo(32,y); x.lineTo(W-32,y); x.stroke();
     x.fillStyle=acc; x.font="800 24px sans-serif"; x.fillText(DOWK[d], 40, y+40);
@@ -1838,8 +1942,13 @@ function shopLinks(q){
        + `<a class="shop" target="_blank" rel="noopener" href="${kurl(t)}">컬리</a>`;
 }
 /* ============================================================ 상태·엔진 ============================================================ */
-function defaultSchedule(){ return {brk:[1,0,0,0,0,0,1], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[0,1,1,1,1,1,0]}; }
-let S = { tier: 20, schedule: defaultSchedule(), times: {...DEFAULT_TIMES}, custom: {}, picker: null, favs: [], shuffle: {}, kcalCap: DAILY_KCAL_CAP, proTarget: 100, inbound: [], skips: [], eaten: [], adj: {}, myItems: [], shoplist: [], avoid: [], extraMeals: [], myRecipes: [], nick: "", feedLocal: [], menuMods: {}, habits: {}, cookStats: {}, servings: 1, myPresets: [], dayPlan: {}, lastSeen: "", theme: "auto" };
+/* 처음 열었을 때의 시간표.
+   예전 값은 '아침은 주말만, 간식은 평일만' — 직장인 생활을 그대로 박아 둔 것이었다.
+   지금은 누구에게나 통하는 기본형인 세 끼로 시작하고, 첫 화면에서 바로 자기 것으로 고치게 한다.
+   (아무 끼니도 안 켜진 채로 시작하면 식단·장보기·예산이 전부 빈 화면이 되어 더 나쁘다) */
+function defaultSchedule(){ return {brk:[1,1,1,1,1,1,1], lunch:[1,1,1,1,1,1,1], dinner:[1,1,1,1,1,1,1], snack:[0,0,0,0,0,0,0]}; }
+let S = { tier: 20, schedule: defaultSchedule(), times: {...DEFAULT_TIMES}, custom: {}, picker: null, favs: [], shuffle: {}, kcalCap: DAILY_KCAL_CAP, proTarget: 100, inbound: [], skips: [], eaten: [], adj: {}, myItems: [], shoplist: [], avoid: [], extraMeals: [], myRecipes: [], nick: "", feedLocal: [], menuMods: {}, habits: {}, cookStats: {}, servings: 1, myPresets: [], dayPlan: {}, lastSeen: "", theme: "auto",
+  budget: 200000, tierAuto: true };
 /* ============================================================
    메뉴 레이어 엔진 — 렌더 직전에 MEALS를 [원본→내 레시피→재료 커스텀→인원수] 순으로 다시 입힘.
    그래서 재료를 추가/빼면 영양·재고차감·비용·장보기·추천이 전부 자동 반영된다.
@@ -2045,6 +2154,30 @@ function itemState(id){
   return {level:"good", label:"여유"};
 }
 function monthSpend(){ const m=todayStr().slice(0,7); return S.inbound.filter(r=>r.date.slice(0,7)===m).reduce((a,r)=>a+(r.price||0),0); }
+/* ── 이번 달 돈은 세 덩어리로 말한다 ────────────────────────────
+   예전에는 "예산 − 이 식단의 원가"만 보여 줬다. 그 값은 '이 식단을 처음부터
+   전부 새로 사면 얼마'라는 이론값이라, 실제 생활을 하나도 반영하지 못했다.
+     · 외식 10만 원을 써도 여유가 그대로였고
+     · 저녁을 다섯 번 걸러도 그대로였고
+     · 냉장고에 쌀·김치가 가득해도 그대로였다.
+   이제 가계부가 쓰는 방식 그대로 — 예산 − 이미 쓴 돈 − 앞으로 살 것 — 으로 센다.
+   세 경우가 저절로 반영된다: 외식은 '쓴 돈'에, 거른 끼니와 냉장고 재고는
+   '앞으로 살 것'(buyPlan)이 이미 빼고 계산하기 때문이다. */
+function monthSpentSplit(){
+  const m=todayStr().slice(0,7);
+  let grocery=0, dining=0;
+  for(const r of (S.inbound||[])){
+    if((r.date||"").slice(0,7)!==m) continue;
+    if(r.itemId==="extra") dining+=(r.price||0); else grocery+=(r.price||0);
+  }
+  return {grocery, dining, total:grocery+dining};
+}
+/* [주문] 탭 [지금 살 것]에 담긴 금액 — 화면의 그 숫자와 같아야 한다 */
+function plannedBuyCost(){
+  const p=buyPlan();
+  return [...p.bulk, ...p.fresh].reduce((a,x)=>a+x.cost,0);
+}
+function monthLeft(){ return tierBudget()-monthSpentSplit().total-plannedBuyCost(); }
 function expiringSoon(){ return Object.keys(ITEMS).filter(id=>{ const e=expiryInfo(id); return e&&e.dd>=0&&e.dd<=3&&stockOf(id)>0; }); }
 /* ============================================================ 레시피 탭 — 라이브러리·검색·내 레시피 ============================================================ */
 let RQ={cat:"", sort:"match", q:""};
@@ -2684,7 +2817,7 @@ function render(){
 /* 맨 위 알림은 '지금 손을 써야 하는 것'만 말한다.
    ① 아직 아무것도 안 산 사람 → 어디서 시작하는지 (설명 대신 버튼)
    ② 오늘내일 상하는 재료 → 앱 재료와 내 재료를 한 줄에 모아서
-   여기 없던 '다 떨어졌어요' 줄은 지웠다. 바로 위 타일이 [지금 살 것 N가지]라고
+   여기 있던 '다 떨어졌어요' 줄은 지웠다. 바로 위 타일이 [지금 살 것 N가지]라고
    이미 말하고, 목록은 [주문] 탭이 갖고 있다. 같은 말을 세 번 할 이유가 없다. */
 function renderAlerts(){
   let h="";
@@ -2697,6 +2830,7 @@ function renderAlerts(){
   if(soon.length)
     h+=`<div class="alertbox warn">▲ <div><b>곧 상해요</b> — ${escH(soon.join(", "))}. 오늘 끼니에 먼저 쓰세요.</div></div>`;
   $("alerts").innerHTML=h;
+  syncSetupSheet();
 }
 function mealCard(slot, mid, dateS){
   const m=MEALS[mid], key=dateS+"|"+slot;
@@ -2713,6 +2847,7 @@ function mealCard(slot, mid, dateS){
     <div class="btnrow">
       <button class="btn ${eaten?"primary":""}" onclick="markEaten('${key}')">${eaten?"✓ 먹었어요":"먹었어요"}</button>
       <button class="btn ${skipped?"primary":"ghost"}" onclick="markSkip('${key}')">${skipped?"↩︎ 걸렀음 취소":"걸렀어요"}</button>
+      ${skipped?`<button class="btn ghost" onclick="logDining('${key}')">💳 외식비 적기</button>`:""}
       <button class="btn ghost" onclick="openPicker(${dow(dateS)},'${slot}')">매주 ${DOWK[dow(dateS)]}요일 ${SLOT_SHORT[slot]} 바꾸기</button>
       <button class="btn ghost" onclick="openCustomize('${mid}')">${m.modded?"🔧 내 방식":"재료 빼고 더하기"}</button>
     </div>
@@ -2819,9 +2954,6 @@ function renderToday(){
     <div class="tiny" style="margin-top:5px">냉동육은 전날 밤 냉장칸으로 옮겨 해동하세요. 점심은 아침에 10분이면 만들어 도시락으로 쌀 수 있어요.</div></div>`;
   $("view-today").innerHTML=h;
 }
-function tierPickerHtml(){
-  return `<div class="chips">${TIER_KEYS.map(t=>`<button class="chip ${S.tier===t?"on":""}" onclick="setTier(${t})">${t}만</button>`).join("")}</div>`;
-}
 function scheduleEditorHtml(){
   const rows = DOWK.map((dk,d)=>{
     const cells = SLOT_ORDER.map(slot=>{
@@ -2835,13 +2967,36 @@ function scheduleEditorHtml(){
   }).join("");
   const head = SLOT_ORDER.map(slot=>`<th><button class="sc-th" onclick="editTime('${slot}')">${SLOT_SHORT[slot]}<div class="sn">${S.times[slot]}</div></button></th>`).join("");
   return `<div class="card">
-    <h2>🗓️ 나의 식사 스케줄 <span class="sub">끼니 켜고 끄기</span></h2>
-    <div class="chips">${Object.keys(PRESETS).map(n=>`<button class="chip" onclick="applyPreset('${n}')">${n}</button>`).join("")}</div>
-    <div class="chips" style="margin-top:6px">${(S.myPresets||[]).map(p=>`<button class="chip" onclick="applyMyPreset('${p.id}')">💾 ${escH(p.name)}</button>`).join("")}<button class="chip" style="border:1.5px dashed var(--axis);background:transparent" onclick="saveMyPreset()">＋ 현재 스케줄 저장</button></div>
-    ${(S.myPresets||[]).length?`<div class="tiny" style="margin-top:4px">내 프리셋을 지우려면: ${(S.myPresets||[]).map(p=>`<a href="javascript:void(0)" onclick="deleteMyPreset('${p.id}')" style="color:var(--crit-text);text-decoration:none">「${escH(p.name)}」 삭제</a>`).join(" · ")}</div>`:""}
-    <div class="sched-wrap"><table class="sched"><tr><th></th>${head}</tr>${rows}</table></div>
-    <div class="tiny" style="margin-top:8px"><b>칸을 눌러</b> 끼니를 켜고 끕니다. 위쪽 시간을 누르면 내 식사 시간을 바꿀 수 있어요.<br>끼니를 바꾸면 아래 예상 식비와 [주문]·[재고]가 함께 바뀝니다. <b>이미 지난 날의 기록은 그대로</b>예요.</div>
-  </div>`;
+    <h2>🗓️ 내 식사 시간표 <span class="sub">주 ${mealsPerWeek()}끼</span></h2>
+    <div class="tiny" style="margin-bottom:2px">챙겨 먹는 끼니와 시간을 골라 주세요. 언제든 바꿀 수 있어요.</div>
+    ${mealSetupHtml()}
+    ${(S.myPresets||[]).length||mealsPerWeek()?`<div class="btnrow" style="margin-top:12px">
+      ${(S.myPresets||[]).map(p=>`<button class="btn sm" onclick="applyMyPreset('${p.id}')">${escH(p.name)}</button>`).join("")}
+      <button class="btn sm" onclick="saveMyPreset()">＋ 지금 시간표 저장</button>
+    </div>`:""}
+    ${(S.myPresets||[]).length?`<div class="tiny" style="margin-top:6px">저장한 시간표 지우기 — ${(S.myPresets||[]).map(p=>`<a href="javascript:void(0)" onclick="deleteMyPreset('${p.id}')" style="color:var(--crit-text);text-decoration:none">${escH(p.name)}</a>`).join(" · ")}</div>`:""}
+  </div>`
+  + foldCard("schedday", "📆 요일마다 다르게", "교대근무·불규칙한 주에",
+    `<div class="tiny" style="margin-bottom:8px">칸을 눌러 그 요일의 끼니를 켜고 끕니다. 여기서 고치면 위 설정은 <b>직접 고름</b>으로 바뀌어요.</div>
+     <div class="sched-wrap"><table class="sched"><tr><th></th>${head}</tr>${rows}</table></div>
+     <div class="tiny" style="margin-top:8px">끼니를 바꾸면 예상 식비와 [주문]·[재고]가 함께 바뀝니다. <b>이미 지난 날의 기록은 그대로</b>예요.</div>`);
+}
+/* 끼니 네 줄 — 첫 실행 세팅과 [식단표]가 똑같은 화면을 쓴다.
+   처음 본 곳과 나중에 고치는 곳이 같아야 헤매지 않는다. */
+function mealSetupHtml(){
+  return `<div class="mset">${SLOT_ORDER.map(slot=>{
+    const cur=slotWhen(slot), on=cur!=="off";
+    return `<div class="mset-row">
+      <div class="mset-top">
+        <span class="mset-nm">${SLOT_LABEL[slot]}</span>
+        ${on?`<input class="mset-time" id="mset-time-${slot}" type="time" value="${S.times[slot]||DEFAULT_TIMES[slot]}"
+              aria-label="${SLOT_SHORT[slot]} 시간" onchange="setSlotTime('${slot}',this.value)">`
+            :`<span class="mset-off">안 먹음</span>`}
+      </div>
+      <div class="mset-seg">${MEAL_WHEN_ORDER.map(k=>
+        `<button class="${cur===k?"on":""}" onclick="setSlotWhen('${slot}','${k}')">${MEAL_WHEN[k].label}</button>`).join("")}</div>
+      ${cur==="custom"?`<div class="mset-note">요일마다 다르게 골라 뒀어요 — 아래 [요일마다 다르게]에서 볼 수 있어요.</div>`:""}
+    </div>`;}).join("")}</div>`;
 }
 function renderPlan(){
   const est=monthlyEstimate(), mpw=mealsPerWeek();
@@ -2859,9 +3014,13 @@ function renderPlan(){
       <td>${parts}${tag}</td></tr>`;
   }
   const T=TIERS[S.tier];
-  const tierRows = TIER_KEYS.map(t=>`<tr class="${S.tier===t?"on":""}" onclick="setTier(${t})" style="cursor:pointer">
-    <td class="n">${t}만</td><td><b>${TIERS[t].name}</b><div class="n" style="color:var(--ink-3)">${TIERS[t].feat}</div></td>
-    <td class="n">약 ${(estimateForTier(t)/10000).toFixed(1)}만</td></tr>`).join("");
+  /* 표의 금액은 '그 수준으로 지금 내 끼니를 먹으면 한 달에 얼마'다.
+     끼니를 줄이면 이 숫자가 통째로 내려가고, 그래서 더 높은 수준이 예산 안에 들어온다. */
+  const tierRows = TIER_KEYS.map(t=>{
+    const c=estimateForTier(t), fits=c<=tierBudget();
+    return `<tr class="${S.tier===t?"on":""}" onclick="setTier(${t})" style="cursor:pointer">
+    <td class="n">${TIERS[t].name}</td><td><div class="n" style="color:var(--ink-3)">${TIERS[t].feat}</div></td>
+    <td class="n" style="${fits?"":"color:var(--ink-3)"}">약 ${(c/10000).toFixed(1)}만${fits?"":" ↑"}</td></tr>`;}).join("");
   /* 이 탭에 온 이유는 '이번 주에 뭘 먹나'다. 그것이 맨 위에 온다.
      스케줄 편집기는 그것을 바꾸는 도구, 예상 식비는 그 결과다. 읽는 순서대로 놓는다. */
   $("view-plan").innerHTML=
@@ -2882,14 +3041,37 @@ function renderPlan(){
   </div>`
   + scheduleEditorHtml()
   +`<div class="card">
-    <h2>💰 예상 월 식비 <span class="sub">주 ${mpw}끼 · ${S.tier}만 등급</span></h2>
-    <div class="muted">지금 스케줄·메뉴로 식재료비는 한 달 약 <b>${est.toLocaleString()}원</b>이에요. 이번 달 예산 ${(tierBudget()/10000).toFixed(0)}만 원에서 ${discretionaryRoom()>=0?`<b style="color:var(--good-text)">${discretionaryRoom().toLocaleString()}원</b>이 남아 외식·간식에 쓸 수 있어요`:`<b style="color:var(--crit-text)">${(-discretionaryRoom()).toLocaleString()}원</b>이 모자라요 — 메뉴를 가볍게 하거나 등급을 올리세요`}.</div>
+    <h2>💰 한 달 식재료비 <span class="sub">주 ${mpw}끼</span></h2>
+    <div class="bud-set">
+      <input class="bud-in" id="bud-in" type="text" inputmode="numeric" autocomplete="off"
+             value="${fmt(tierBudget())}" aria-label="한 달 식재료비"
+             onfocus="this.value=String(tierBudget())" onchange="setBudget(this.value)">
+    </div>
+    <div class="chips" style="margin-top:8px">${[200000,300000,400000,500000,700000,1000000].map(v=>
+      `<button class="chip ${tierBudget()===v?"on":""}" onclick="setBudget(${v})">${(v/10000)}만</button>`).join("")}</div>
+    <div class="tiny" style="margin-top:8px">${mpw
+      ? `주 ${mpw}끼로 나누면 <b>한 끼 약 ${Math.round(perMealBudget()).toLocaleString()}원</b>이에요. 끼니를 줄이면 한 끼에 쓸 수 있는 돈이 늘어 메뉴가 올라갑니다.`
+      : `먼저 위에서 챙겨 먹을 끼니를 골라 주세요.`}</div>
     <hr class="h">
-    <div class="tiny" style="margin-bottom:5px">재료 등급 — 누르면 그 등급의 식재료비로 바뀝니다 (외식·구독은 빠짐)</div>
-    ${tierPickerHtml()}
-    <table class="tiers" style="margin-top:8px">${tierRows}</table>
-    <div class="tiny" style="margin-top:8px">등급을 올리면 연어·소고기·한우 같은 재료가 식단에 들어오고, 고를 수 있는 메뉴도 늘어납니다.<br>비싼 재료가 섞이면 <b>예상액이 등급 금액을 넘을 수 있어요</b> — 그때는 메뉴를 가벼운 것으로 바꾸면 내려갑니다. 표의 금액은 지금 스케줄로 다시 계산한 값이에요.</div>
+    <div class="bgt">
+      <div class="bgt-row"><span>이 식단을 한 달 유지하면</span><b>${fmt(est)}</b></div>
+      <div class="bgt-row"><span>${discretionaryRoom()>=0?"예산에서 남는 몫":"예산보다 모자란 몫"}</span>
+        <b style="color:${discretionaryRoom()>=0?"var(--good-text)":"var(--crit-text)"}">${fmt(Math.abs(discretionaryRoom()))}</b></div>
+    </div>
+    <div class="tiny" style="margin-top:6px">여기 금액은 <b>재료를 처음부터 다 산다면</b> 얼마인지예요 — 메뉴 수준을 정하는 기준이라 냉장고 사정에 따라 흔들리지 않게 해 뒀어요.
+      이번 달 실제로 얼마 남았는지는 [주문] 탭에서 봐요.</div>
+    <div class="btnrow"><button class="btn sm" onclick="go('order')">이번 달 예산 보러 가기</button></div>
+    <div class="bud-now">
+      <div><b>🍽️ 지금 메뉴 수준 — ${TIERS[S.tier].name}</b>
+        <div class="tiny" style="margin-top:3px">${TIERS[S.tier].feat}</div></div>
+      <span class="badge ${S.tierAuto===false?"plain":"good"}">${S.tierAuto===false?"직접 고름":"예산에 맞춤"}</span>
+    </div>
+    ${S.tierAuto===false?`<div class="btnrow" style="margin-top:10px"><button class="btn sm" onclick="backToAutoTier()">예산에 맞춰 자동으로</button></div>`:""}
   </div>`
+  + foldCard("tierpick", "🍽️ 메뉴 수준 직접 고르기", TIERS[S.tier].name,
+    `<div class="tiny" style="margin-bottom:8px">여기서 고르면 예산 자동 맞춤이 꺼집니다. 금액은 지금 내 끼니 수로 다시 계산한 한 달 식재료비예요.</div>
+     <table class="tiers">${tierRows}</table>
+     <div class="tiny" style="margin-top:8px">수준을 올리면 연어·소고기·한우 같은 재료가 들어오고 고를 수 있는 메뉴도 늘어나요.</div>`)
   + foldCard("planfeat", "🍽️ 이 식단의 특징", "",
     `<div class="muted">단백질원을 닭·돼지·계란·두부·참치(상위 등급은 연어·소고기·한우)로 돌려 질리지 않는 고단백 유지형 식단입니다. 모든 메뉴가 팬 하나로 10~15분 조리이고, 2026년 7월 기준 최저가로 계산했어요(가격은 변합니다).</div>`)
   + foldCard("planprep", "🧑‍🍳 일요일 30분 밑준비", "평일을 10분으로",
@@ -2980,6 +3162,19 @@ function buySectionHtml(kind, plan){
       <button class="btn primary" onclick="inboundPlan('${kind}')">도착했어요 · ${packs}팩 입고</button>
     </div></div>`;
 }
+/* 이번 달 쓰는 속도를 보고 '올릴 수 있어요 / 낮추는 게 좋아요'를 제안한다.
+   자동으로 바꾸지는 않는다 — 장을 본 뒤 메뉴가 저절로 바뀌면 산 재료가 남거나 모자란다.
+   바꿀지는 사람이 버튼으로 정한다. */
+function paceCardHtml(){
+  const p=paceTier(); if(!p) return "";
+  if(p.t===S.tier) return "";
+  const up=p.t>S.tier;
+  return `<div class="pace ${up?"up":"down"}">
+    <div><b>${up?"이번 달, 예산이 남고 있어요":"이번 달, 예산을 앞서 쓰고 있어요"}</b>
+      <div class="tiny" style="margin-top:3px">남은 ${p.leftDays}일에 ${fmt(Math.max(0,p.leftWon))} — 이 속도라면 <b>${TIERS[p.t].name}</b> 수준이 맞아요.</div></div>
+    <button class="btn sm" onclick="setTier(${p.t})">${up?"메뉴 올리기":"메뉴 낮추기"}</button>
+  </div>`;
+}
 function renderOrder(){
   const plan=buyPlan();
   const all=[...plan.bulk, ...plan.fresh];
@@ -3005,16 +3200,29 @@ function renderOrder(){
   h+=shopCardHtml();
 
   /* ③ 돈 */
-  h+=`<div class="card"><h2>💰 이번 달 예산 <span class="sub">주 ${mealsPerWeek()}끼 · ${S.tier}만 등급</span></h2>
+  const sp2=monthSpentSplit(), willBuy=plannedBuyCost();
+  const used=Math.min(100, Math.max(0,(sp2.total+willBuy)/Math.max(1,bud)*100));
+  const usedNow=Math.min(100, Math.max(0, sp2.total/Math.max(1,bud)*100));
+  /* 큰 숫자는 '예산 − 실제로 쓴 돈'이다. 국내 가계부·카드 앱이 모두 이 값을 남은 돈이라
+     부르고, 무엇보다 아직 사지도 않은 돈 때문에 첫날부터 빨간 글씨가 뜨지 않는다.
+     장바구니는 아래에 따로 두고, 다 샀을 때 얼마가 되는지를 한 줄 더 붙인다. */
+  const cash=bud-sp2.total, after=monthLeft();
+  h+=`<div class="card"><h2>💰 이번 달 예산 <span class="sub">${new Date().getMonth()+1}월</span></h2>
+    <div class="buy-big"><span class="n" style="color:${cash<0?"var(--crit-text)":"var(--ink-1)"}">${cash<0?"-":""}${fmt(Math.abs(cash))}</span>
+      <span class="u"><span class="nw">${cash<0?"예산을 넘겼어요":"남은 돈"}</span></span></div>
+    <div class="bar2"><i class="a" style="width:${usedNow}%"></i><i class="b" style="width:${Math.max(0,used-usedNow)}%"></i></div>
     <div class="bgt">
-      <div class="bgt-row"><span>지금까지 쓴 돈</span><b>${fmt(sp)}</b></div>
-      <div class="bgt-row"><span>이번 달 예산</span><b>${fmt(bud)}</b></div>
-      <div class="bgt-row"><span>${remain<0?"예산을 넘긴 금액":"남은 돈"}</span><b style="color:${remain<0?"var(--crit-text)":"var(--good-text)"}">${fmt(Math.abs(remain))}</b></div>
-      <div class="bgt-row sub2"><span>식재료로 나갈 예상</span><b>${fmt(est)}</b></div>
-      <div class="bgt-row sub2"><span>외식·간식에 쓸 여유</span><b${discretionaryRoom()<0?' style="color:var(--crit-text)"':''}>${discretionaryRoom()>=0?fmt(discretionaryRoom()):"-"+fmt(-discretionaryRoom())}</b></div>
+      <div class="bgt-row"><span>한 달 예산</span><b>${fmt(bud)}</b></div>
+      <div class="bgt-row"><span>이미 쓴 돈</span><b>${fmt(sp2.total)}</b></div>
+      ${sp2.total?`<div class="bgt-row sub2"><span>· 장보기</span><b>${fmt(sp2.grocery)}</b></div>
+      <div class="bgt-row sub2"><span>· 외식·간식</span><b>${fmt(sp2.dining)}</b></div>`:""}
+      <div class="bgt-row"><span>지금 [살 것]에 담긴 것</span><b>${fmt(willBuy)}</b></div>
+      <div class="bgt-row after"><span>${after<0?"다 사면 모자라는 돈":"다 사고 나면"}</span>
+        <b style="color:${after<0?"var(--crit-text)":"var(--good-text)"}">${fmt(Math.abs(after))}</b></div>
     </div>
-    <div style="height:8px;background:var(--grid);border-radius:5px;margin-top:8px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(100,sp/Math.max(1,bud)*100)}%;background:${sp>bud?"var(--crit)":"var(--accent)"}"></i></div>
-    <div class="tiny" style="margin-top:8px">식재료 예상액은 <b>[식단표]에 켜 둔 끼니와 고른 메뉴</b>로 자동 계산해요. 외식·구독처럼 재료가 아닌 지출은 여기에 안 들어갑니다.</div></div>`;
+    ${after<0?`<div class="tiny hint">쌀·조미료처럼 <b>큰 팩은 한 번 사면 다음 달까지</b> 가요. 첫 장보기라 이번 달에 몰려 나갈 뿐, 다음 달부터는 여유가 생깁니다.</div>`:""}
+    ${paceCardHtml()}
+    <div class="tiny" style="margin-top:8px">냉장고에 있는 재료와 <b>걸렀어요</b>로 표시한 끼니는 <b>담긴 것</b>에서 이미 빼고 계산했어요. 외식비는 끼니 카드의 [외식비 적기]로 남기면 <b>쓴 돈</b>에 들어옵니다.</div></div>`;
 
   /* ④ 산 기록 */
   h+=ledgerCardHtml();
@@ -3044,7 +3252,7 @@ function renderOrder(){
   if(ex.length){
     h+=foldCard("extras", "✨ 남는 예산으로 즐길거리", `여유 ${discretionaryRoom()>=0?fmt(discretionaryRoom()):"0원(초과)"}`,
       ex.map(e=>`<div class="order-row">
-        <div><div class="nm">${e.label}</div><div class="qy">${e.tier}만 등급부터</div></div>
+        <div><div class="nm">${e.label}</div><div class="qy">${TIERS[e.tier].name} 수준부터</div></div>
         <div class="links">${e.q?`<a class="shop" target="_blank" rel="noopener" href="${coup(e.q)}">쿠팡</a><a class="shop" target="_blank" rel="noopener" href="${kurl(e.q)}">컬리</a>`:""}
           <button class="btn sm" onclick="extraSpend('${e.label.replace(/'/g,"")}', ${e.cost})">지출 기록</button></div>
         <div class="pr">월 ${fmt(e.cost)}</div></div>`).join("")
@@ -3070,6 +3278,11 @@ function renderOrder(){
 
   $("view-order").innerHTML=h;
 }
+/* 세팅 시트가 떠 있으면 그 안의 끼니 줄도 같이 새로 그린다 */
+function syncSetupSheet(){
+  const b=document.getElementById("setup-body");
+  if(b) b.innerHTML=mealSetupHtml();
+}
 function renderData(){
   $("view-data").innerHTML=settingsCardHtml()+reportCardHtml()+statsCardHtml()
     +foldCard("avoid", "🚫 제외 재료", (S.avoid||[]).length?`${(S.avoid||[]).length}가지 제외 중`:"알레르기·비선호", avoidBodyHtml())
@@ -3090,7 +3303,7 @@ function renderData(){
     <div class="tiny" style="margin-top:4px">복원하면 지금 기록이 전부 바뀌어요. 무엇이 들어오는지 먼저 보여 드리고, 바꾼 뒤에도 한 번은 되돌릴 수 있습니다.</div>
     <hr class="h">
     <div class="btnrow"><button class="btn" style="color:var(--crit-text)" onclick="resetRecords()">기록 초기화</button>
-      <button class="btn" onclick="if(confirm('스케줄을 기본(직장인)으로 되돌릴까요?')){S.schedule=defaultSchedule();S.times={...DEFAULT_TIMES};render();}">스케줄 기본값</button>
+      <button class="btn" onclick="if(confirm('식사 시간표를 처음 상태(세 끼)로 되돌릴까요?')){S.schedule=defaultSchedule();S.times={...DEFAULT_TIMES};render();}">시간표 되돌리기</button>
       <button class="btn" onclick="if(confirm('이 기기에 자동 저장된 데이터를 지울까요? (지금 화면의 상태는 유지되지만, 새로 열 때는 초기 상태로 시작해요)')){clearLocal();alert('자동 저장 데이터를 지웠어요.');}">자동 저장 지우기</button></div>`)
   + guideCardHtml()
   + foldCard("howto", "📖 사용법 요약", "8줄", `
@@ -3102,7 +3315,7 @@ function renderData(){
     ⑤ 재고가 실제와 다르면 [재고]에서 ＋/− — 고친 내용은 [주문] 탭 내역에 한 줄로 남고 지울 수 있어요<br>
     ⑥ 소진·유통기한 경고 뜨면 [주문]에서 링크로 재주문<br>
     ⑦ 기록은 이 기기에 <b>자동 저장</b> — 기기를 바꿀 때만 왼쪽 위 ⚙︎ 설정에서 내보내기<br>
-    ⑧ 예산이 달라지면 [식단표]에서 등급을 바꾸세요 — 식단과 주문 목록이 함께 바뀝니다</div>`)
+    ⑧ 예산이 달라지면 [식단표]에서 <b>한 달 식재료비</b>를 고치세요 — 메뉴 수준과 주문 목록이 함께 바뀝니다</div>`)
   +`<div class="tiny" style="text-align:center;margin:14px 0 4px">식단 매니저 v${APP_VER} · 개인용 무료 앱</div>`;
 }
 /* ============================================================ 동작 ============================================================ */
@@ -3139,6 +3352,27 @@ function fmtAmt(id, g){
   const it=ITEMS[id]; if(!it) return String(g);
   if(it.unit==="g") return g>=1000 ? (g/1000).toFixed(1)+"kg" : Math.round(g)+"g";
   return (Math.round(g*10)/10)+it.unit;
+}
+/* 끼니를 거른 이유는 대개 외식이다. 그 자리에서 금액을 남길 수 있게 한다 —
+   예전에는 [주문] 탭 '즐길거리' 안에 있어서 아무도 찾지 못했다.
+   같은 끼니에 두 번 적으면 앞의 것을 갈아 끼운다(중복 기록 방지). */
+function logDining(key){
+  const parts=String(key).split("|");
+  const label=(SLOT_SHORT[parts[1]]||"외식")+" 외식";
+  const old=(S.inbound||[]).find(r=>r&&r.diningKey===key);
+  const p=prompt(label+" — 얼마 쓰셨어요? (원)", old?old.price:"");
+  if(p===null) return;
+  const won=Math.max(0, Math.round(+String(p).replace(/[^0-9]/g,"")||0));
+  const prev=old?{...old}:null;
+  if(old) S.inbound=S.inbound.filter(r=>r!==old);
+  let rec=null;
+  if(won>0){ rec={id:uid("ib"), date:parts[0]||todayStr(), itemId:"extra", packs:0, price:won, label, diningKey:key};
+    S.inbound.push(rec); }
+  render();
+  toast(won>0?label+" "+fmt(won):"외식비를 지웠어요", ()=>{
+    if(rec) S.inbound=S.inbound.filter(r=>r!==rec);
+    if(prev) S.inbound.push(prev);
+  });
 }
 function extraSpend(label, def){
   const p=prompt(label+" — 실제 결제금액(원)을 입력하세요.", def);
@@ -3294,7 +3528,7 @@ function foldCard(k, title, sub, bodyHtml, openByDefault){
     ${on?`<div class="fold-b">${bodyHtml}</div>`:""}</div>`;
 }
 function resetRecords(){
-  if(!confirm("입고·지출·재고 조정과 함께 달력의 먹은 기록도 전부 지워집니다. 계속할까요? (스케줄·등급은 유지)")) return;
+  if(!confirm("입고·지출·재고 조정과 함께 달력의 먹은 기록도 전부 지워집니다. 계속할까요? (시간표·예산은 유지)")) return;
   const prev={inbound:S.inbound, skips:S.skips, eaten:S.eaten, adj:{...(S.adj||{})}, extraMeals:S.extraMeals, dayPlan:S.dayPlan};
   S={...S, inbound:[], skips:[], eaten:[], adj:{}, extraMeals:[], dayPlan:{}};
   render();
@@ -3461,23 +3695,59 @@ function go(v){
   for(const k of ["today","plan","recipes","cal","stock","order","data"]) $("view-"+k).classList.toggle("hidden",k!==v);
   window.scrollTo({top:0});
 }
-function setTier(t){ S.tier=t; render(); }
-function toggleSlot(slot,d){ S.schedule[slot][d]=S.schedule[slot][d]?0:1; render(); }
-function applyPreset(name){ const p=PRESETS[name]; if(!p) return;
-  const prevS=JSON.parse(JSON.stringify(S.schedule)), prevT={...S.times};
-  S.schedule={brk:[...p.brk],lunch:[...p.lunch],dinner:[...p.dinner],snack:[...p.snack]};
-  if(p.times) S.times={...S.times, ...p.times};
+/* 수준을 직접 고르면 그때부터 자동 맞춤을 끈다 — 내가 고른 것을 앱이 되돌리면 안 된다. */
+function setTier(t){
+  const prevT=S.tier, prevA=S.tierAuto;
+  S.tier=t; S.tierAuto=false; render();
+  toast("메뉴 수준 · "+TIERS[t].name+" (직접 고름)", ()=>{ S.tier=prevT; S.tierAuto=prevA; });
+}
+function backToAutoTier(){
+  const prevT=S.tier, prevA=S.tierAuto;
+  S.tierAuto=true; const ch=autoFitTier(); render();
+  toast("예산에 맞춰 자동으로 골라요"+(ch?" · "+TIERS[ch.now].name:""), ()=>{ S.tier=prevT; S.tierAuto=prevA; });
+}
+function toggleSlot(slot,d){
+  const prevT=S.tier;
+  S.schedule[slot][d]=S.schedule[slot][d]?0:1;
+  const ch=autoFitTier(); render();
+  if(ch) toast("끼니가 바뀌어 메뉴를 "+TIERS[ch.now].name+"(으)로 맞췄어요", ()=>{
+    S.schedule[slot][d]=S.schedule[slot][d]?0:1; S.tier=prevT; });
+}
+/* 지금 이 끼니가 네 가지 중 어디에 해당하는지. 요일별로 직접 고른 상태면 "custom". */
+function slotWhen(slot){
+  const a=(S.schedule[slot]||[]).map(x=>!!x);
+  for(const k of MEAL_WHEN_ORDER){
+    const d=MEAL_WHEN[k].days;
+    if(a.every((v,i)=>v===!!d[i])) return k;
+  }
+  return "custom";
+}
+function setSlotWhen(slot,k){
+  const w=MEAL_WHEN[k]; if(!w) return;
+  const prev=[...(S.schedule[slot]||[])], prevT=S.tier;
+  S.schedule[slot]=[...w.days];
+  const ch=autoFitTier();              // 끼니가 바뀌면 한 끼 예산이 바뀐다 → 메뉴 수준도 따라간다
   render();
-  toast("「"+name+"」 스케줄로 바꿨어요", ()=>{ S.schedule=prevS; S.times=prevT; }); }
-/* 내 스케줄 프리셋 — 생활 패턴을 이름 붙여 저장·전환 */
+  toast(SLOT_SHORT[slot]+" — "+w.label+(ch?` · 메뉴 ${TIERS[ch.now].name}`:""),
+    ()=>{ S.schedule[slot]=prev; S.tier=prevT; });
+}
+/* 식사 시간 — 예전에는 prompt로 "HH:MM 형식으로 적으세요"를 받고
+   틀리면 alert로 형식을 알려 줬다. 폰에는 시간 고르는 표준 입력이 있다. */
+function setSlotTime(slot,v){
+  if(!/^([01]\d|2[0-3]):([0-5]\d)$/.test(String(v||""))) return;
+  S.times[slot]=v; render();
+}
+/* 내가 만든 시간표 — 주마다 생활이 바뀌는 사람이 이름 붙여 저장하고 오간다.
+   앱이 미리 정해 둔 생활방식 프리셋(PRESETS)은 없앴다. 이건 사용자가 직접 만든 것이다. */
 function saveMyPreset(){
-  const name=prompt("이 스케줄의 이름을 지어 주세요. (예: 야근 주간, 운동 주간)"); if(!name||!name.trim()) return;
+  const name=prompt("이 시간표의 이름을 지어 주세요. (예: 이번 주, 야간 근무)"); if(!name||!name.trim()) return;
   if(!Array.isArray(S.myPresets)) S.myPresets=[];
   S.myPresets.push({id:uid("sp"), name:name.trim().slice(0,12),
     schedule:JSON.parse(JSON.stringify(S.schedule)), times:{...S.times}});
   render();
 }
 function applyMyPreset(id){ const p=(S.myPresets||[]).find(x=>x.id===id); if(!p) return;
+  const _prevT=S.tier; setTimeout(()=>{ if(autoFitTier()) render(); }, 0);
   const prevS=JSON.parse(JSON.stringify(S.schedule)), prevT={...S.times};
   S.schedule=JSON.parse(JSON.stringify(p.schedule)); S.times={...p.times}; render();
   toast("「"+p.name+"」 스케줄로 바꿨어요", ()=>{ S.schedule=prevS; S.times=prevT; }); }
@@ -3485,14 +3755,12 @@ function deleteMyPreset(id){
   const arr=(S.myPresets||[]), i=arr.findIndex(x=>x.id===id); if(i<0) return;
   const gone=arr[i];
   S.myPresets=arr.filter(x=>x.id!==id); render();
-  toast("「"+gone.name+"」 프리셋 삭제", ()=>{ if(!Array.isArray(S.myPresets)) S.myPresets=[]; S.myPresets.splice(Math.min(i,S.myPresets.length),0,gone); }); }
+  toast("「"+gone.name+"」 시간표 삭제", ()=>{ if(!Array.isArray(S.myPresets)) S.myPresets=[]; S.myPresets.splice(Math.min(i,S.myPresets.length),0,gone); }); }
+/* 표 머리의 시간을 누르면 아래 설정 줄의 시간 칸으로 데려간다 —
+   같은 것을 두 군데서 다른 방식으로 고치게 하지 않는다. */
 function editTime(slot){
-  const cur=S.times[slot]||DEFAULT_TIMES[slot];
-  const v=prompt(SLOT_SHORT[slot]+" 시간 (예: 08:00) — 내 식사 시간이에요. 알림은 아직 없습니다.", cur);
-  if(v===null) return;
-  const m=/^([01]?\d|2[0-3]):([0-5]\d)$/.exec(v.trim());
-  if(!m){ alert("시간 형식은 HH:MM 이에요 (예: 07:30)"); return; }
-  S.times[slot]=v.trim(); render();
+  const el=document.getElementById("mset-time-"+slot);
+  if(el){ try{ el.scrollIntoView({block:"center"}); }catch(e){} el.focus(); if(el.showPicker) try{ el.showPicker(); }catch(e){} }
 }
 function cycleTheme(){ S.theme=S.theme==="auto"?"light":S.theme==="light"?"dark":"auto"; applyTheme(); }
 function applyTheme(){
@@ -3503,7 +3771,7 @@ function applyTheme(){
   tb.title = S.theme==="auto"?"자동":S.theme==="light"?"라이트":"다크";
 }
 /* ============================================================ PWA — 설치·오프라인·업데이트 (웹주소로 열릴 때만 활성화, file://은 기존 그대로) ============================================================ */
-const APP_VER="27.1";
+const APP_VER="27.5";
 const IS_NATIVE=location.protocol==="capacitor:"||!!window.Capacitor;   // 앱스토어(iOS) 네이티브 셸
 const IS_HTTP=(location.protocol==="http:"||location.protocol==="https:")&&!IS_NATIVE;
 let _installEvt=null, _swWaiting=null;
@@ -3645,6 +3913,28 @@ function openIntro(){
   if(tr){ tr.scrollLeft=0; tr.addEventListener("scroll", obSync, {passive:true}); }
   document.addEventListener("keydown", obKey);
 }
+/* 소개가 끝나면 시간표 한 장. 여기서 고르면 바로 내 식단이 된다.
+   [식단표]의 그 화면을 그대로 쓴다 — 두 번 배우게 하지 않는다. */
+const SETUP_KEY="mealapp_setup_v1";
+function setupDone(){ try{ return !!localStorage.getItem(SETUP_KEY); }catch(e){ return true; } }
+function openSetup(){
+  if(document.getElementById("setup-wrap")) return;
+  const d=document.createElement("div"); d.id="setup-wrap";
+  d.innerHTML=`<div class="setup-back" onclick="closeSetup()"></div>
+    <div class="setup-box" role="dialog" aria-label="내 식사 시간표">
+      <h2 style="font-size:18px;margin:0 0 4px">내 식사 시간표</h2>
+      <div class="tiny" style="margin-bottom:2px">챙겨 먹는 끼니와 시간을 골라 주세요. 나중에 [식단표]에서 언제든 바꿀 수 있어요.</div>
+      <div id="setup-body">${mealSetupHtml()}</div>
+      <div class="btnrow" style="margin-top:14px">
+        <button class="btn primary" style="flex:1" onclick="closeSetup()">이대로 시작하기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(d);
+}
+function closeSetup(){
+  try{ localStorage.setItem(SETUP_KEY,"1"); }catch(e){}
+  const w=document.getElementById("setup-wrap"); if(w) w.remove();
+}
 function maybeIntro(){
   try{ if(!lsAvailable() || localStorage.getItem(INTRO_KEY)) return; openIntro(); }catch(e){}
 }
@@ -3653,6 +3943,7 @@ function closeIntro(){
   document.removeEventListener("keydown", obKey);
   const w=document.getElementById("ob-wrap"); if(w) w.remove();
   const old=document.getElementById("intro-root"); if(old) old.remove();   // 구버전 잔재
+  if(!setupDone()) openSetup();
 }
 function guideCardHtml(){
   return `<div class="card"><h2>🔒 로그인 없이, 이 기기에만</h2>
