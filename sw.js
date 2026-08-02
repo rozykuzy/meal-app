@@ -1,6 +1,6 @@
 /* 식단 매니저 서비스워커 — 오프라인 캐시 + 업데이트
    새 버전 배포 시 VER만 올리면 됩니다(파일 교체 후). */
-const VER = "27.5.0";
+const VER = "33.1.0";
 const CACHE = "mealapp-" + VER;
 const ASSETS = [
   "./",
@@ -9,7 +9,8 @@ const ASSETS = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/maskable-512.png",
-  "./icons/apple-touch-icon.png"
+  "./icons/apple-touch-icon.png",
+  "./privacy-policy.html"
 ];
 
 self.addEventListener("install", (e) => {
